@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "lib": ["esnext"],
+    "allowJs": true,
+    "checkJs": true,
+    "experimentalDecorators": true,
+    "types": ["google-apps-script"]
+  },
+  "include": ["./**/*"]
+}

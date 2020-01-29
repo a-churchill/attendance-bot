@@ -1,0 +1,31 @@
+{
+  "typescript.tsdk": "./node_modules/typescript/lib",
+  "editor.tabSize": 2,
+  "cSpell.words": [
+    "adchurch",
+    "all",
+    "arjun",
+    "attendancebot",
+    "ckr",
+    "col",
+    "ehmff",
+    "esnext",
+    "g",
+    "jy",
+    "milesacb",
+    "mrkdwn",
+    "next",
+    "prac",
+    "qjhtnz",
+    "r",
+    "rowley",
+    "scrub",
+    "su",
+    "testing",
+    "thumbsup",
+    "vdey",
+    "xa",
+    "xoxb",
+    "z"
+  ]
+}

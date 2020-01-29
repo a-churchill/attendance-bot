@@ -1,0 +1,79 @@
+{
+    "type": "view_submission",
+    "team": {
+        "id": "T03D10646",
+        "domain": "mit-ultimate"
+    },
+    "user": {
+        "id": "U7J19UE2D",
+        "username": "adchurch",
+        "name": "adchurch",
+        "team_id": "T03D10646"
+    },
+    "api_app_id": "ASU175P6D",
+    "token": "XPwoftA4gIAg5CmNUTeS97I9",
+    "trigger_id": "922971473776.3443006142.127d957324610796cf360d8c0d3d7eb1",
+    "view": {
+        "id": "VT75D01UN",
+        "team_id": "T03D10646",
+        "type": "modal",
+        "blocks": [
+            {
+                "type": "input",
+                "block_id": "wwrLE",
+                "label": {
+                    "type": "plain_text",
+                    "text": ":exclamation: Please give a reason for missing practice:",
+                    "emoji": true
+                },
+                "optional": false,
+                "element": {
+                    "type": "plain_text_input",
+                    "placeholder": {
+                        "type": "plain_text",
+                        "text": "Your explanation here",
+                        "emoji": true
+                    },
+                    "multiline": true,
+                    "action_id": "bzP"
+                }
+            }
+        ],
+        "private_metadata": "",
+        "callback_id": "out_explanation",
+        "state": {
+            "values": {
+                "wwrLE": {
+                    "bzP": {
+                        "type": "plain_text_input",
+                        "value": "test"
+                    }
+                }
+            }
+        },
+        "hash": "1580107322.ab72eecc",
+        "title": {
+            "type": "plain_text",
+            "text": "Explanation",
+            "emoji": true
+        },
+        "clear_on_close": false,
+        "notify_on_close": false,
+        "close": {
+            "type": "plain_text",
+            "text": "Cancel",
+            "emoji": true
+        },
+        "submit": {
+            "type": "plain_text",
+            "text": "Submit",
+            "emoji": true
+        },
+        "previous_view_id": null,
+        "root_view_id": "VT75D01UN",
+        "app_id": "ASU175P6D",
+        "external_id": "",
+        "app_installed_team_id": "T03D10646",
+        "bot_id": "BT46G2EKA"
+    }
+}

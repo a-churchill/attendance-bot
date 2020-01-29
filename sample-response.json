@@ -1,0 +1,59 @@
+{
+    "parameter": {
+        "channel_name": "testing-attendancebot",
+        "user_id": "U7J19UE2D",
+        "user_name": "adchurch",
+        "trigger_id": "926990322950.3443006142.4a9c95d0fdfbdbb5e741c9ebe8f36212",
+        "team_domain": "mit-ultimate",
+        "team_id": "T03D10646",
+        "text": "",
+        "channel_id": "CST5V9275",
+        "command": "/in",
+        "token": "XPwoftA4gIAg5CmNUTeS97I9",
+        "response_url": "https://hooks.slack.com/commands/T03D10646/924324264996/bnQpuYLwM77MgprMCaiErchC"
+    },
+    "contextPath": "",
+    "contentLength": 362,
+    "queryString": "",
+    "parameters": {
+        "channel_name": [
+            "testing-attendancebot"
+        ],
+        "user_id": [
+            "U7J19UE2D"
+        ],
+        "user_name": [
+            "adchurch"
+        ],
+        "trigger_id": [
+            "926990322950.3443006142.4a9c95d0fdfbdbb5e741c9ebe8f36212"
+        ],
+        "team_domain": [
+            "mit-ultimate"
+        ],
+        "team_id": [
+            "T03D10646"
+        ],
+        "text": [
+            ""
+        ],
+        "channel_id": [
+            "CST5V9275"
+        ],
+        "command": [
+            "/in"
+        ],
+        "token": [
+            "XPwoftA4gIAg5CmNUTeS97I9"
+        ],
+        "response_url": [
+            "https://hooks.slack.com/commands/T03D10646/924324264996/bnQpuYLwM77MgprMCaiErchC"
+        ]
+    },
+    "postData": {
+        "type": "application/x-www-form-urlencoded",
+        "length": 362,
+        "contents": "token=XPwoftA4gIAg5CmNUTeS97I9&team_id=T03D10646&team_domain=mit-ultimate&channel_id=CST5V9275&channel_name=testing-attendancebot&user_id=U7J19UE2D&user_name=adchurch&command=%2Fin&text=&response_url=https%3A%2F%2Fhooks.slack.com%2Fcommands%2FT03D10646%2F924324264996%2FbnQpuYLwM77MgprMCaiErchC&trigger_id=926990322950.3443006142.4a9c95d0fdfbdbb5e741c9ebe8f36212",
+        "name": "postData"
+    }
+}
