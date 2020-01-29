@@ -2,3 +2,6 @@
 /.blackbox/pubring.kbx~
 /.blackbox/secring.gpg
 /api_key.txt
+details.txt
+node_modules/
+built/
