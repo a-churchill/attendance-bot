@@ -5,6 +5,8 @@
 3. Copy the files in the `src` directory into the directory of the cloned project.
 4. Run `clasp push` to push the code.
 
+The Slack API key is stored in the Google Apps Script properties. It is also encrypted in this repository with [blackbox](https://github.com/StackExchange/blackbox#blackbox-).
+
 ## Limitations
 
 - Cannot handle multiple events on same date with slash commands (will always return info about the first one)

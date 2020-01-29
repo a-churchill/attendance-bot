@@ -15,7 +15,8 @@ const ANNOUNCE_PICTURE_URL =
   "https://zn9zxq.bn.files.1drv.com/y4mV6VyeBzHtQSym10dE0dMd91KLlMO1EGLPoiiZaB1eBhpmuXzpRGBqqqetJLrQiH1kt48qRc-RbqivZAfsy65YdUfURsYtRc5L2WvDRhaBqhI-Y1v2u7c0Y7G11dwcex5ClfV_dEBvdOrWUlsFvGLypYs1uhi9hv_DoQp2U8ingapZOtOxAeRWbjkin9YfUE9qS80rsbo88CpwArOyVULjA?width=1000&height=1000&cropmode=none";
 const REASON_BLOCK_ID = "reason_block";
 const REASON_ACTION_ID = "reason_action";
-const GITHUB_ISSUE_URL = "https://github.com/xxaxdxcxx";
+const GITHUB_ISSUE_URL =
+  "https://github.com/xxaxdxcxx/attendance-bot/issues/new";
 
 // user response variables
 const SUCCESS_RESPONSE = ":heavy_check_mark: Updated spreadsheet. ";
