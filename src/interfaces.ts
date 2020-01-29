@@ -26,6 +26,7 @@ interface EventInfo {
   count?: number;
   userAvatars?: Array<string>;
   offset?: string;
+  includeTimeLoc?: boolean; // used to check if background is not white in spreadsheet access
 }
 
 interface AnnouncementUpdateInfo {

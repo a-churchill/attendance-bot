@@ -36,7 +36,7 @@ function handleInOut(
   );
 
   // ensure user input is valid: handle date
-  let [date, ...rest] = dateStr.split("#"); // remove offset for checking, add it back at the end
+  let [date, ...rest] = dateStr.split(OFFSET_SPECIFIER_PREFIX); // remove offset for checking, add it back at the end
   if (date.length > 0 && !date.match(/^[1-3]?\d\/[1-3]?\d$/i)) {
     // doesn't match m/d format, no leading 0's
     if (date.match(/^[1-3]?\d\/[1-3]?\d\/(\d{2}|\d{4})$/i)) {
@@ -54,7 +54,7 @@ function handleInOut(
   // append year to date (if not empty), to properly look up in spreadsheet
   let currentYear = new Date().getFullYear();
   if (date.length > 0) date = `${date}/${currentYear}`;
-  date = [date, ...rest].join("#"); // replace offset; if it's invalid error will be thrown when fetching date row
+  date = [date, ...rest].join(OFFSET_SPECIFIER_PREFIX); // replace offset; if it's invalid error will be thrown when fetching date row
 
   if (!userIn && reason.length == 0) {
     // trying to /out without a reason SMH
@@ -66,25 +66,20 @@ function handleInOut(
   try {
     const row = getUserRow(username, sheet);
     const col = getDateCol(date, sheet) + offset;
-    if (sheet.getRange(row, col).getBackground() === BLACK_COLOR)
+    const cell = sheet.getRange(row, col);
+    if (cell.getBackground() === BLACK_COLOR)
       // cell blacked out
       addBlackedOutAlert = true;
     if (userIn) {
-      if (
-        sheet.getRange(row, col).getDisplayValue() === "y" &&
-        sheet.getRange(row, col).getNote() === reason
-      )
+      if (cell.getDisplayValue() === "y" && cell.getNote() === reason)
         spreadsheetUnchanged = true;
-      sheet.getRange(row, col).setNote(reason);
-      sheet.getRange(row, col).setValue("y");
+      cell.setNote(reason);
+      cell.setValue("y");
     } else {
-      if (
-        sheet.getRange(row, col).getDisplayValue() === "n" &&
-        sheet.getRange(row, col).getNote() === reason
-      )
+      if (cell.getDisplayValue() === "n" && cell.getNote() === reason)
         spreadsheetUnchanged = true;
-      sheet.getRange(row, col).setNote(reason);
-      sheet.getRange(row, col).setValue("n");
+      cell.setNote(reason);
+      cell.setValue("n");
     }
     console.log(`Success: updated (row ${row}, col ${col})`);
     colUpdated = col;
@@ -96,15 +91,12 @@ function handleInOut(
   // check if the update is coming pretty late (after 10pm day before), or for past event
   // fails silently, in case of weird formatted date on attendance spreadsheet who cares
   try {
-    let eventDate = sheet.getRange(DATE_ROW, colUpdated).getDisplayValue();
-    let updateBefore = new Date(eventDate);
+    const eventDate = getEventInfoFromCol(sheet, colUpdated).eventDate;
+    let updateBefore = new Date(eventDate); // assumes date string is m/d/yyyy
     updateBefore.setTime(updateBefore.getTime() - TWO_HOURS); // 10pm the day before
     let nextDay = new Date(eventDate);
     nextDay.setTime(nextDay.getTime() + ONE_DAY); // midnight the next day
-    let today = new Date();
-    console.log(
-      `Should be updated before ${updateBefore}; currently it is ${today}`
-    );
+    const today = new Date();
     if (!userIn && updateBefore < today) {
       addLateChangeAlert = true;
       console.log("Alerting user about late change");

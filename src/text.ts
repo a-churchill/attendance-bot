@@ -24,6 +24,7 @@ function makeResponseText(
   col: number,
   userIn: boolean
 ): string {
+  // expensive but worth it for accuracy
   let eventCount = parseInt(sheet.getRange(COUNT_ROW, col).getDisplayValue());
   let response = "You're ";
   if (userIn) {

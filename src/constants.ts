@@ -1,7 +1,7 @@
 // configuration of app
 const CURRENT_SHEET = "Spring (testing)";
 const ANNOUNCE_CHANNEL_ID = "CST5V9275"; // testing: CST5V9275; announce: C03D3MVC6
-const API_TOKEN = PropertiesService.getUserProperties().getProperty(
+const API_TOKEN = PropertiesService.getScriptProperties().getProperty(
   "API_TOKEN"
 );
 const SLACK_SEND_MESSAGE_URL = "https://slack.com/api/chat.postMessage";
@@ -17,6 +17,14 @@ const REASON_BLOCK_ID = "reason_block";
 const REASON_ACTION_ID = "reason_action";
 const GITHUB_ISSUE_URL =
   "https://github.com/xxaxdxcxx/attendance-bot/issues/new";
+
+// cache configuration
+const CACHE_DURATION = 1500; // 25 minutes
+const CACHE_DURATION_SHORT = 60; // long enough to span a request; not as long to allow for updates to count if necessary (although when necessary, count is fetched directly)
+const DATE_ROW_CACHE_KEY = "date_row";
+const EVENT_INFO_CACHE_KEY_PREFIX = "event_info_col_";
+const USERNAME_COL_CACHE_KEY = "user_col";
+const OFFSET_SPECIFIER_PREFIX = "#";
 
 // user response variables
 const SUCCESS_RESPONSE = ":heavy_check_mark: Updated spreadsheet. ";
@@ -49,6 +57,8 @@ const TIME_ROW = 3;
 const LOCATION_ROW = 4;
 const COUNT_ROW = 5;
 const USERNAME_COL = 2;
+const FIRST_INFO_ROW = DESCRIPTION_ROW;
+const LAST_INFO_ROW = COUNT_ROW;
 
 // useful constants
 const ONE_DAY = 24 * 60 * 60 * 1000;

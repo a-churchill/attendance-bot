@@ -4,20 +4,18 @@
  * @param userId Slack user ID, should start with "U"
  */
 function getUserAvatarUrl(userId: string): string {
-  const cache = CacheService.getScriptCache();
-  const cached = cache.get(userId);
-  if (cached != null) {
-    return cached;
-  }
-
-  let requestUrl = `${SLACK_USER_INFO_URL}?token=${
+  let cacheResult = tryFetchCache(userId);
+  if (cacheResult.hit) return cacheResult.result as string;
+  // not a hit, fetch and add to cache
+  const cache = cacheResult.result as GoogleAppsScript.Cache.Cache;
+  const requestUrl = `${SLACK_USER_INFO_URL}?token=${
     API_TOKEN.split(" ")[1]
   }&user=${userId}`;
-  let userResponse = UrlFetchApp.fetch(requestUrl);
-  let userInfo: SlackUserRequestInfo = JSON.parse(
+  const userResponse = UrlFetchApp.fetch(requestUrl);
+  const userInfo: SlackUserRequestInfo = JSON.parse(
     userResponse.getContentText()
   );
   const result = userInfo.user.profile.image_48;
-  cache.put(userId, result, 1500); // cache for 25 minutes
+  cache.put(userId, result, CACHE_DURATION); // cache for 25 minutes
   return result;
 }

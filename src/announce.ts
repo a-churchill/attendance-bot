@@ -20,7 +20,7 @@ function handleAnnounce(
     let note = context.text;
     if (note === "help") return sendResponse(ANNOUNCE_HELP_TEXT);
     let offset = "";
-    if (note.charAt(0) === "#") {
+    if (note.charAt(0) === OFFSET_SPECIFIER_PREFIX) {
       // specified offset
       offset = note.split(" ")[0];
       col += getNumberFromOffset(offset);
@@ -166,6 +166,7 @@ function updateAnnouncement(
   // update event count
   const dateWithYear = `${eventInfo.eventDate}/${new Date().getFullYear()}`;
   const col = getDateCol(dateWithYear + eventInfo.offset, sheet);
+  // expensive but worth it to allow up-to-date announcement message
   eventInfo.count = parseInt(sheet.getRange(COUNT_ROW, col).getDisplayValue());
 
   let payload: SlackMessageUpdateInfo = {
@@ -182,7 +183,7 @@ function updateAnnouncement(
     },
     payload: JSON.stringify(payload)
   };
-  let response = UrlFetchApp.fetch(SLACK_UPDATE_MESSAGE_URL, options);
+  UrlFetchApp.fetch(SLACK_UPDATE_MESSAGE_URL, options);
   console.log("Announcement updated");
 }
 
@@ -201,11 +202,7 @@ function sendAnnouncement(
 ): void {
   // collect event data
   let eventInfo: EventInfo = {
-    eventType: sheet.getRange(DESCRIPTION_ROW, col).getDisplayValue(),
-    eventDate: sheet.getRange(DATE_ROW, col).getDisplayValue(),
-    eventTime: sheet.getRange(TIME_ROW, col).getDisplayValue(),
-    eventLocation: sheet.getRange(LOCATION_ROW, col).getDisplayValue(),
-    count: parseInt(sheet.getRange(COUNT_ROW, col).getDisplayValue()),
+    ...getEventInfoFromCol(sheet, col),
     userAvatars: [],
     note,
     offset

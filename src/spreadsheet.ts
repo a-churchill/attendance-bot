@@ -4,9 +4,26 @@ function getUserRow(
   username: string,
   sheet: GoogleAppsScript.Spreadsheet.Sheet
 ): number {
-  let lastRow = sheet.getLastRow();
-  let usernamesDeep = sheet.getRange(1, USERNAME_COL, lastRow, 1).getValues();
-  let usernames = usernamesDeep.map(x => x[0]);
+  // check cache for usernames
+  let usernames = [];
+  const cacheResult = tryFetchCache(USERNAME_COL_CACHE_KEY);
+  if (cacheResult.hit) {
+    const result = cacheResult.result as string;
+    usernames = JSON.parse(result);
+  } else {
+    // cache miss
+    const lastRow = sheet.getLastRow();
+    const usernamesDeep = sheet
+      .getRange(1, USERNAME_COL, lastRow, 1)
+      .getValues();
+    usernames = usernamesDeep.map(x => x[0]);
+    const cache = cacheResult.result as GoogleAppsScript.Cache.Cache;
+    cache.put(
+      USERNAME_COL_CACHE_KEY,
+      JSON.stringify(usernames),
+      CACHE_DURATION
+    );
+  }
   let row = usernames.indexOf(username, HEADER_ROWS);
   if (row === -1) {
     throw "username " + username + " not found on spreadsheet!";
@@ -30,11 +47,13 @@ function getDateCol(
     }
   }
   let offset = 0;
-  if (date.indexOf("#") !== -1) {
+  if (date.indexOf(OFFSET_SPECIFIER_PREFIX) !== -1) {
     // date includes offset; handle here
-    offset = getNumberFromOffset(date.substring(date.indexOf("#")));
+    offset = getNumberFromOffset(
+      date.substring(date.indexOf(OFFSET_SPECIFIER_PREFIX))
+    );
     if (isNaN(offset)) throw "Invalid offset";
-    date = date.split("#")[0];
+    date = date.split(OFFSET_SPECIFIER_PREFIX)[0];
   }
 
   let dates = getDateRowValues(sheet);
@@ -43,7 +62,7 @@ function getDateCol(
     let nextPrac: string;
     try {
       let nextPracCol = getNextPracticeDateCol(sheet);
-      nextPrac = sheet.getRange(DATE_ROW, nextPracCol).getDisplayValue();
+      nextPrac = dates[nextPracCol - 1]; // account for zero-indexing
     } catch (err) {
       throw "couldn't find any event on " + date + "." + DATE_HELP_INFO;
     }
@@ -57,12 +76,23 @@ function getDateCol(
   return col + offset + 1;
 }
 
-// fetches the values of every date on the spreadsheet
+/**
+ * Gets a list containing the date string for the entire date row. Cached for
+ * CACHE_DURATION after first fetch.
+ * @param sheet current sheet
+ */
 function getDateRowValues(
   sheet: GoogleAppsScript.Spreadsheet.Sheet
 ): Array<string> {
-  let lastCol = sheet.getLastColumn();
-  let dates = sheet.getRange(DATE_ROW, 1, 1, lastCol).getDisplayValues()[0];
+  const cacheResult = tryFetchCache(DATE_ROW_CACHE_KEY);
+  if (cacheResult.hit) {
+    const result = cacheResult.result as string;
+    return JSON.parse(result);
+  }
+  const lastCol = sheet.getLastColumn();
+  const dates = sheet.getRange(DATE_ROW, 1, 1, lastCol).getDisplayValues()[0];
+  const cache = cacheResult.result as GoogleAppsScript.Cache.Cache;
+  cache.put(DATE_ROW_CACHE_KEY, JSON.stringify(dates), CACHE_DURATION); // cache for 25 minutes
   return dates;
 }
 
@@ -86,6 +116,47 @@ function getNextPracticeDateCol(
   throw "no practice in next " + MAX_EVENT_SEARCH_DISTANCE + " days.";
 }
 
+/**
+ * Fetches the event information for the given column. Fetches the eventType,
+ * eventDate, eventTime, eventLocation, count, and includeTimeLoc properties of
+ * the EventInfo interface. Cached for CACHE_DURATION_SHORT, by column
+ * @param sheet current sheet
+ * @param col column of event to fetch
+ */
+function getEventInfoFromCol(
+  sheet: GoogleAppsScript.Spreadsheet.Sheet,
+  col: number
+): EventInfo {
+  const cacheKey = EVENT_INFO_CACHE_KEY_PREFIX + col;
+  const cacheResult = tryFetchCache(cacheKey);
+  if (cacheResult.hit) {
+    const result = cacheResult.result as string;
+    return JSON.parse(result);
+  }
+  const infoRange = sheet.getRange(
+    FIRST_INFO_ROW,
+    col,
+    LAST_INFO_ROW - FIRST_INFO_ROW + 1
+  );
+  const displayValues = infoRange.getDisplayValues().map(x => x[0]); // flatten
+  const eventType = fixCase(displayValues[DESCRIPTION_ROW - FIRST_INFO_ROW]);
+  const eventDate = displayValues[DATE_ROW - FIRST_INFO_ROW];
+  const eventTime = displayValues[TIME_ROW - FIRST_INFO_ROW];
+  const eventLocation = displayValues[LOCATION_ROW - FIRST_INFO_ROW];
+  const count = parseInt(displayValues[COUNT_ROW - FIRST_INFO_ROW]);
+  let eventInfo: EventInfo = {
+    eventType,
+    eventDate,
+    eventTime,
+    eventLocation,
+    count,
+    includeTimeLoc: infoRange.getBackground() === WHITE_COLOR
+  };
+  const cache = cacheResult.result as GoogleAppsScript.Cache.Cache;
+  cache.put(cacheKey, JSON.stringify(eventInfo), CACHE_DURATION_SHORT);
+  return eventInfo;
+}
+
 // gets event description for given column. Will be string of format:
 // [event type] on [event date] from [event time] at [event location].
 // includeTimeLoc defaults to true.
@@ -95,15 +166,8 @@ function getEventDescriptionForCol(
   col: number,
   includeTimeLoc = true
 ) {
-  let eventInfo: EventInfo = {
-    eventType: fixCase(sheet.getRange(DESCRIPTION_ROW, col).getDisplayValue()),
-    eventDate: sheet.getRange(DATE_ROW, col).getDisplayValue(),
-    eventTime: sheet.getRange(TIME_ROW, col).getDisplayValue(),
-    eventLocation: sheet.getRange(LOCATION_ROW, col).getDisplayValue()
-  };
+  let eventInfo = getEventInfoFromCol(sheet, col);
   // don't include time and location for highlighted events
-  includeTimeLoc =
-    includeTimeLoc &&
-    sheet.getRange(DESCRIPTION_ROW, col).getBackground() === WHITE_COLOR;
+  includeTimeLoc = includeTimeLoc && eventInfo.includeTimeLoc;
   return getEventDescription(eventInfo, includeTimeLoc);
 }
