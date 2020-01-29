@@ -1,6 +1,9 @@
 // configuration of app
 const CURRENT_SHEET = "Spring (testing)";
 const ANNOUNCE_CHANNEL_ID = "CST5V9275"; // testing: CST5V9275; announce: C03D3MVC6
+const API_TOKEN = PropertiesService.getUserProperties().getProperty(
+  "API_TOKEN"
+);
 const SLACK_SEND_MESSAGE_URL = "https://slack.com/api/chat.postMessage";
 const SLACK_OPEN_MODAL_URL = "https://slack.com/api/views.open";
 const SLACK_SEND_EPHEMERAL_URL = "https://slack.com/api/chat.postEphemeral";
