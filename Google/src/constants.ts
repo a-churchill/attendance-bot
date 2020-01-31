@@ -1,5 +1,5 @@
 // if true, uses testing workspace and sheet; if false, uses production workspace and sheet
-const TESTING = false;
+const TESTING = true;
 // app configuration
 const CURRENT_SHEET = TESTING ? "Spring (testing)" : "Spring";
 const ANNOUNCE_CHANNEL_ID = TESTING ? "CT2197CMP" : "C03D3MVC6"; // testing-attendancebot: CST5V9275; announce: C03D3MVC6
@@ -24,8 +24,8 @@ const GITHUB_ISSUE_URL =
 const OFFSET_SPECIFIER_PREFIX = "#";
 
 // cache configuration
-const CACHE_DURATION = 1500; // 25 minutes
-const CACHE_DURATION_SHORT = 60; // long enough to span a request; not as long to allow for updates to count if necessary (although when necessary, count is fetched directly)
+const CACHE_DURATION = 21600; // 6 hours
+const CACHE_DURATION_SHORT = 1500;
 const DATE_ROW_CACHE_KEY = TESTING ? "date_row_testing" : "date_row";
 const EVENT_INFO_CACHE_KEY_PREFIX = TESTING
   ? "event_info_col_testing_"

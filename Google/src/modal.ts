@@ -6,7 +6,15 @@
  * @param date the date of the practice the user is missing
  * @param updateInfo the info needed to update the announcement message after submission of the modal
  */
-function openModal(trigger: string, updateInfo: AnnouncementUpdateInfo): void {
+function openModal(
+  trigger: string,
+  updateInfo: AnnouncementUpdateInfo,
+  sheet: GoogleAppsScript.Spreadsheet.Sheet
+): void {
+  // fetch event info to fill cache
+  const col = new ColumnLocator();
+  col.initialize(updateInfo.eventInfo.dateForColumnLocator);
+  getEventInfoFromCol(sheet, getDateCol(col, sheet));
   const payload = {
     trigger_id: trigger,
     view: {

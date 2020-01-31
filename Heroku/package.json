@@ -1,0 +1,30 @@
+{
+  "name": "attendance-bot-gas",
+  "version": "1.0.0",
+  "description": "AttendanceBot for MIT Ultimate",
+  "main": "main.ts",
+  "dependencies": {
+    "@types/google-apps-script": "^1.0.10"
+  },
+  "devDependencies": {
+    "typescript": "^3.5.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-ts": "tsc",
+    "postinstall": "npm run build-ts",
+    "start": "npm run serve",
+    "serve": "node dist/app.js",
+    "watch-node": "nodemon dist/app.js",
+    "watch-ts": "tsc -w"
+  },
+  "repository": {
+    "url": "https://github.com/xxaxdxcxx/attendance-bot",
+    "type": "git"
+  },
+  "engines": {
+    "node": "8.10.0"
+  },
+  "author": "Andrew Churchill",
+  "license": "ISC"
+}

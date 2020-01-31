@@ -54,7 +54,7 @@ function doPost(e: PostContent): GoogleAppsScript.Content.TextOutput {
           // set up modal, exit
           updateInfo.addUser = false;
           let trigger = json.trigger_id;
-          openModal(trigger, updateInfo);
+          openModal(trigger, updateInfo, sheet);
           return;
         }
       } else if (json.type === "view_submission") {
