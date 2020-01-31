@@ -1,5 +1,5 @@
 // if true, uses testing workspace and sheet; if false, uses production workspace and sheet
-const TESTING = true;
+const TESTING = false;
 // app configuration
 const CURRENT_SHEET = TESTING ? "Spring (testing)" : "Spring";
 const ANNOUNCE_CHANNEL_ID = TESTING ? "CT2197CMP" : "C03D3MVC6"; // testing-attendancebot: CST5V9275; announce: C03D3MVC6
