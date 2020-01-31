@@ -72,14 +72,100 @@ function fixCase(eventName: string): string {
 }
 
 /**
- * Returns the number of columns offset from the current. So for an offset "#1",
- * this would return 0; for "#2", this would return 1, etc. Throws error if result
- * is less than 0.
- * @param offset string in format "#[number]"
+ * Represents a locator for a column in the spreadsheet. The locator consists of
+ * a date (which must exist in the spreadsheet) and an offset (where "" and "#1"
+ * refer to the same offset, "#2" is next, then "#3", etc.).
+ *
+ * Much safer than using raw strings everywhere. Type is immutable after first
+ * initialization, invalid until initialization.
  */
-function getNumberFromOffset(offset: string): number {
-  const result = parseInt(offset.substring(1)) - 1;
-  if (result < 0)
-    throw `Invalid offset ${offset}; offsets should be positive and 1-indexed`;
-  return result;
+class ColumnLocator {
+  private offset: string; // will always start with '#', followed by valid integer
+  private date: string; // always in format m/d/yyyy (no leading zeroes)
+  private initialized: boolean;
+  static readonly DATE_REGEX = /^1?\d\/[1-3]?\d$/i;
+  static readonly DATE_REGEX_WITH_YEAR = /^1?\d\/[1-3]?\d\/(\d{2}|\d{4})$/i;
+  private static readonly ERROR_MESSAGE = "ColumnLocator uninitialized";
+  /**
+   * Initializes empty ColumnLocator object
+   */
+  constructor() {
+    this.initialized = false;
+  }
+
+  /**
+   * Creates a new ColumnLocator; throws an error if the input string is invalid.
+   * A valid input string has the format `[date](#[offset])?`, where `[date]` is
+   * in the form `m/d(/(yy)?yy)?`, and `[offset]` is a valid integer, in range [1, 9].
+   * @param dateInput the input given by the user (everything after slash command but before space), or string representation from toString.
+   */
+  initialize(dateInput: string): DateParseResult {
+    let [dateStr, ...offsetList] = dateInput.split(OFFSET_SPECIFIER_PREFIX); // remove offset for checking, add it back at the end
+    if (dateStr.length == 0) {
+      return DateParseResult.addToReason;
+    }
+    if (
+      !dateStr.match(ColumnLocator.DATE_REGEX) &&
+      !dateStr.match(ColumnLocator.DATE_REGEX_WITH_YEAR)
+    ) {
+      return DateParseResult.addToReason;
+    }
+    if (dateStr.match(ColumnLocator.DATE_REGEX_WITH_YEAR)) {
+      dateStr = dateStr.substring(0, dateStr.lastIndexOf("/")); // strip year
+    }
+    // now guaranteed that dateStr matches DATE_REGEX; add sanity check
+    if (!dateStr.match(ColumnLocator.DATE_REGEX))
+      throw `Assertion failed, ${dateStr} doesn't match format`;
+
+    // append year to date to follow rep invariant
+    const currentYear = new Date().getFullYear();
+    dateStr = `${dateStr}/${currentYear}`;
+
+    // handle offset
+    let offsetStr =
+      OFFSET_SPECIFIER_PREFIX + offsetList.join(OFFSET_SPECIFIER_PREFIX);
+    if (offsetStr.length == OFFSET_SPECIFIER_PREFIX.length)
+      // no offset specified, give default
+      offsetStr = OFFSET_SPECIFIER_PREFIX + "1";
+    const result = parseInt(
+      offsetStr.substring(OFFSET_SPECIFIER_PREFIX.length)
+    );
+    if (isNaN(result) || result < 1 || result > 9)
+      return DateParseResult.addToReason;
+    this.offset = offsetStr;
+    this.date = dateStr;
+    this.initialized = true;
+    return DateParseResult.success;
+  }
+
+  /**
+   * Returns the date, in the format m/d/yyyy (no leading zeroes)
+   */
+  getDate(): string {
+    if (!this.initialized) throw ColumnLocator.ERROR_MESSAGE;
+    return this.date;
+  }
+
+  /**
+   * Returns the offset, where offset for "#n" is n - 1 (so "#2" -> 1)
+   */
+  getOffset(): number {
+    if (!this.initialized) throw ColumnLocator.ERROR_MESSAGE;
+    return parseInt(this.offset.substring(OFFSET_SPECIFIER_PREFIX.length)) - 1;
+  }
+
+  /**
+   * Returns object in representation that can be parsed by the constructor.
+   */
+  toString(): string {
+    if (!this.initialized) throw ColumnLocator.ERROR_MESSAGE;
+    return this.date + this.offset;
+  }
+
+  /**
+   * Returns true if object is initialized (so it has valid data), false otherwise.
+   */
+  isValid(): boolean {
+    return this.initialized;
+  }
 }

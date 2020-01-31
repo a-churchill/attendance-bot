@@ -26,13 +26,19 @@ And AttendanceBot gives helpful feedback to the user, giving them usage hints an
 
 AttendanceBot is written entirely in TypeScript, and it is hosted by the Google Apps Script service. The platform sends POST requests to the `doPost` function, and exposes the API for updating the spreadsheet itself.
 
-## Assumptions about the spreadsheet
+## Assumptions about External Services
+
+### Attendance Spreadsheet
 
 AttendanceBot pulls all of its data from the attendance spreadsheet we already use. It expects the following to be true:
 
 - Each column represents a separate event, and the pertinent information about that event (e.g. time, location) is in a predictable row, as configured in [`constants.ts`](src/constants.ts). _Note: none of the fields need to be unique._
 - One column (which can be hidden) holds each player's Slack username in their corresponding row.
 - The event information changes fairly infrequently (event information is cached for about 30 minutes after any cache miss). _Note: changes to the number of people coming are not cached, to ensure accuracy._
+
+### Slack
+
+The bot needs the following permissions: [channels:history](https://api.slack.com/scopes/channels:history), [channels:read](https://api.slack.com/scopes/channels:read), [chat:write](https://api.slack.com/scopes/chat:write), [commands](https://api.slack.com/scopes/commands), and [users:read](https://api.slack.com/scopes/commands).
 
 ## Contributing
 

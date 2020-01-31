@@ -1,8 +1,10 @@
-// configuration of app
-const CURRENT_SHEET = "Spring (testing)";
-const ANNOUNCE_CHANNEL_ID = "CST5V9275"; // testing: CST5V9275; announce: C03D3MVC6
+// if true, uses testing workspace and sheet; if false, uses production workspace and sheet
+const TESTING = true;
+// app configuration
+const CURRENT_SHEET = TESTING ? "Spring (testing)" : "Spring";
+const ANNOUNCE_CHANNEL_ID = TESTING ? "CT2197CMP" : "C03D3MVC6"; // testing-attendancebot: CST5V9275; announce: C03D3MVC6
 const API_TOKEN = PropertiesService.getScriptProperties().getProperty(
-  "API_TOKEN"
+  TESTING ? "API_TOKEN_TESTING" : "API_TOKEN"
 );
 const SLACK_SEND_MESSAGE_URL = "https://slack.com/api/chat.postMessage";
 const SLACK_OPEN_MODAL_URL = "https://slack.com/api/views.open";
@@ -10,29 +12,31 @@ const SLACK_SEND_EPHEMERAL_URL = "https://slack.com/api/chat.postEphemeral";
 const SLACK_USER_INFO_URL = "https://slack.com/api/users.info";
 const SLACK_UPDATE_MESSAGE_URL = "https://slack.com/api/chat.update";
 const MAX_EVENT_SEARCH_DISTANCE = 7;
-const AUTHORIZED_ANNOUNCERS = ["adchurch", "milesacb", "vdey123", "rowley"];
+const AUTHORIZED_ANNOUNCERS = TESTING
+  ? ["chu.andrew.8", "chu.andrew.8202"]
+  : ["adchurch", "milesacb", "vdey123", "rowley"];
 const ANNOUNCE_PICTURE_URL =
   "https://zn9zxq.bn.files.1drv.com/y4mV6VyeBzHtQSym10dE0dMd91KLlMO1EGLPoiiZaB1eBhpmuXzpRGBqqqetJLrQiH1kt48qRc-RbqivZAfsy65YdUfURsYtRc5L2WvDRhaBqhI-Y1v2u7c0Y7G11dwcex5ClfV_dEBvdOrWUlsFvGLypYs1uhi9hv_DoQp2U8ingapZOtOxAeRWbjkin9YfUE9qS80rsbo88CpwArOyVULjA?width=1000&height=1000&cropmode=none";
 const REASON_BLOCK_ID = "reason_block";
 const REASON_ACTION_ID = "reason_action";
 const GITHUB_ISSUE_URL =
   "https://github.com/xxaxdxcxx/attendance-bot/issues/new";
+const OFFSET_SPECIFIER_PREFIX = "#";
 
 // cache configuration
 const CACHE_DURATION = 1500; // 25 minutes
 const CACHE_DURATION_SHORT = 60; // long enough to span a request; not as long to allow for updates to count if necessary (although when necessary, count is fetched directly)
-const DATE_ROW_CACHE_KEY = "date_row";
-const EVENT_INFO_CACHE_KEY_PREFIX = "event_info_col_";
-const USERNAME_COL_CACHE_KEY = "user_col";
-const OFFSET_SPECIFIER_PREFIX = "#";
+const DATE_ROW_CACHE_KEY = TESTING ? "date_row_testing" : "date_row";
+const EVENT_INFO_CACHE_KEY_PREFIX = TESTING
+  ? "event_info_col_testing_"
+  : "event_info_col_";
+const USERNAME_COL_CACHE_KEY = TESTING ? "user_col_testing" : "user_col";
 
 // user response variables
 const SUCCESS_RESPONSE = ":heavy_check_mark: Updated spreadsheet. ";
 const NO_CHANGE_RESPONSE = ":thumbsup_all: No change necessary. ";
 const FAILURE_RESPONSE = ":scrub_arjun: Couldn't update the spreadsheet: ";
 const NO_REASON_ERROR = "please add a reason for why you're missing practice.";
-const IGNORE_YEAR_REMINDER =
-  "\n:information_source: By the way, no need to include the year in the date when you type it!";
 const DATE_HELP_INFO =
   "\n:information_source: If you just want to choose the next upcoming practice, no need to specify the date";
 const LATE_CHANGE_ALERT =

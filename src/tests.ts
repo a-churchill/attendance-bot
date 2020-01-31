@@ -1,6 +1,6 @@
 function testClearCache(): void {
   const cache = CacheService.getScriptCache();
-  let toRemove = [DATE_ROW_CACHE_KEY];
+  let toRemove = [DATE_ROW_CACHE_KEY, USERNAME_COL_CACHE_KEY];
   for (let i = 0; i < 100; i++) {
     toRemove.push(EVENT_INFO_CACHE_KEY_PREFIX + i);
   }
@@ -54,18 +54,10 @@ function testGetUserRow(): void {
   Logger.log("Row of user " + user + ": " + row);
 }
 
-function testGetDateCol(): void {
-  let date = "2/3/2020";
-  let ss = SpreadsheetApp.getActiveSpreadsheet();
-  let sheet = ss.getSheetByName(CURRENT_SHEET);
-  let col = getDateCol(date, sheet);
-  Logger.log("Col of date " + date + ": " + col);
-}
-
 function testGetNextPracticeDateCol(): void {
   let ss = SpreadsheetApp.getActiveSpreadsheet();
   let sheet = ss.getSheetByName(CURRENT_SHEET);
-  let nextPracDate = getNextPracticeDateCol(sheet);
+  let nextPracDate = getNextPracticeDate(sheet);
   Logger.log("Next practice date: " + nextPracDate);
 }
 

@@ -1,5 +1,11 @@
 // gets the row of the given username. Expects the Slack usernames to be in
 // USERNAME_COL. Throws error if username not found.
+/**
+ * Fetches the row with the given Slack username. Throws error if username not
+ * found, with helpful description.
+ * @param username username to fetch
+ * @param sheet current sheet
+ */
 function getUserRow(
   username: string,
   sheet: GoogleAppsScript.Spreadsheet.Sheet
@@ -31,49 +37,39 @@ function getUserRow(
   return row + 1;
 }
 
-// gets the column of the given date. Expects the dates to be in
-// DATE_ROW, and date arg may have offset attached, must have full year. Throws error if date not found, or offset is invalid.
+/**
+ * Gets the column of the given column locator (date and offset). Throws error
+ * if date not found, with error message explaining helpfully.
+ * @param date the column locator (date and offset) to access
+ * @param sheet current sheet
+ */
 function getDateCol(
-  date: string,
+  date: ColumnLocator,
   sheet: GoogleAppsScript.Spreadsheet.Sheet
 ): number {
-  if (date.length === 0) {
+  if (!date.isValid()) {
     // just select next practice
     try {
-      return getNextPracticeDateCol(sheet);
+      return getNextPracticeDate(sheet) as number;
     } catch (err) {
       // no practice in next 7 days
       throw err;
     }
   }
-  let offset = 0;
-  if (date.indexOf(OFFSET_SPECIFIER_PREFIX) !== -1) {
-    // date includes offset; handle here
-    offset = getNumberFromOffset(
-      date.substring(date.indexOf(OFFSET_SPECIFIER_PREFIX))
-    );
-    if (isNaN(offset)) throw "Invalid offset";
-    date = date.split(OFFSET_SPECIFIER_PREFIX)[0];
-  }
 
   let dates = getDateRowValues(sheet);
-  let col = dates.indexOf(date, HEADER_COLS);
+  let col = dates.indexOf(date.getDate(), HEADER_COLS);
   if (col === -1) {
+    // invalid date, get nice information for error message
     let nextPrac: string;
     try {
-      let nextPracCol = getNextPracticeDateCol(sheet);
-      nextPrac = dates[nextPracCol - 1]; // account for zero-indexing
+      nextPrac = getNextPracticeDate(sheet, false) as string;
     } catch (err) {
-      throw "couldn't find any event on " + date + "." + DATE_HELP_INFO;
+      throw `couldn't find any event on ${date}.${DATE_HELP_INFO}`;
     }
-    throw "couldn't find any event on " +
-      date +
-      ". Next practice is on " +
-      nextPrac +
-      "." +
-      DATE_HELP_INFO;
+    throw `couldn't find any event on ${date.getDate()}. Next practice is on ${nextPrac}.${DATE_HELP_INFO}`;
   }
-  return col + offset + 1;
+  return col + date.getOffset() + 1;
 }
 
 /**
@@ -96,11 +92,17 @@ function getDateRowValues(
   return dates;
 }
 
-// fetches column of next practice. Throws error if no practice within next
-// MAX_EVENT_SEARCH_DISTANCE days.
-function getNextPracticeDateCol(
-  sheet: GoogleAppsScript.Spreadsheet.Sheet
-): number {
+/**
+ * Returns the date of the next practice, in m/d/yyyy format (if returnCol is false),
+ * or the column of the next practice (if returnCol is true). Throws error if
+ * there is no practice within the next MAX_EVENT_SEARCH_DISTANCE days.
+ * @param sheet current sheet
+ * @param returnCol return column number if true, date text if false
+ */
+function getNextPracticeDate(
+  sheet: GoogleAppsScript.Spreadsheet.Sheet,
+  returnCol = true
+): number | string {
   console.log("Trying to fetch next practice date");
   let date = new Date();
   let dates = getDateRowValues(sheet);
@@ -111,7 +113,7 @@ function getNextPracticeDateCol(
       date.setTime(date.getTime() + ONE_DAY);
       continue;
     }
-    return col + 1;
+    return returnCol ? col + 1 : getDateText(date);
   }
   throw "no practice in next " + MAX_EVENT_SEARCH_DISTANCE + " days.";
 }
@@ -139,7 +141,7 @@ function getEventInfoFromCol(
     LAST_INFO_ROW - FIRST_INFO_ROW + 1
   );
   const displayValues = infoRange.getDisplayValues().map(x => x[0]); // flatten
-  const eventType = fixCase(displayValues[DESCRIPTION_ROW - FIRST_INFO_ROW]);
+  const eventType = displayValues[DESCRIPTION_ROW - FIRST_INFO_ROW];
   const eventDate = displayValues[DATE_ROW - FIRST_INFO_ROW];
   const eventTime = displayValues[TIME_ROW - FIRST_INFO_ROW];
   const eventLocation = displayValues[LOCATION_ROW - FIRST_INFO_ROW];
@@ -157,17 +159,23 @@ function getEventInfoFromCol(
   return eventInfo;
 }
 
-// gets event description for given column. Will be string of format:
-// [event type] on [event date] from [event time] at [event location].
-// includeTimeLoc defaults to true.
-// if includeTimeLoc is false, it will just be [event type] on [event date].
+/**
+ * gets event description for given column. Will be string of format:
+ * [event type] on [event date] from [event time] at [event location].
+ * includeTimeLoc defaults to true.
+ * if includeTimeLoc is false, result will be [event type] on [event date].
+ * @param sheet current sheet
+ * @param col column to get description for
+ * @param includeTimeLoc whether to include time or location in result.
+ */
 function getEventDescriptionForCol(
   sheet: GoogleAppsScript.Spreadsheet.Sheet,
   col: number,
   includeTimeLoc = true
-) {
+): string {
   let eventInfo = getEventInfoFromCol(sheet, col);
   // don't include time and location for highlighted events
   includeTimeLoc = includeTimeLoc && eventInfo.includeTimeLoc;
+  eventInfo.eventType = fixCase(eventInfo.eventType);
   return getEventDescription(eventInfo, includeTimeLoc);
 }

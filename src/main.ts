@@ -16,7 +16,7 @@ function doPost(e: PostContent): GoogleAppsScript.Content.TextOutput {
     let context: ResponseContext = {
       username: "",
       text: "",
-      command: Command.none
+      command: SlashCommand.none
     };
     let responseInfo: ResponseCustomization = {
       toUrl: "",
@@ -44,8 +44,8 @@ function doPost(e: PostContent): GoogleAppsScript.Content.TextOutput {
           console.log("User clicked in");
           context = {
             username: json.user.username,
-            text: json.actions[0].action_id.split(" ")[1], // date
-            command: Command.in
+            text: updateInfo.eventInfo.dateForColumnLocator, // date
+            command: SlashCommand.in
           };
           responseInfo.toUrl = json.response_url;
         } else {
@@ -54,8 +54,7 @@ function doPost(e: PostContent): GoogleAppsScript.Content.TextOutput {
           // set up modal, exit
           updateInfo.addUser = false;
           let trigger = json.trigger_id;
-          let date = json.actions[0].action_id.split(" ")[1]; // date
-          openModal(trigger, date, updateInfo);
+          openModal(trigger, updateInfo);
           return;
         }
       } else if (json.type === "view_submission") {
@@ -64,13 +63,13 @@ function doPost(e: PostContent): GoogleAppsScript.Content.TextOutput {
         // create out response
         let response: string =
           json.view.state.values[REASON_BLOCK_ID][REASON_ACTION_ID].value;
-        let { date, ...parsedUpdateInfo } = JSON.parse(
+        let parsedUpdateInfo = JSON.parse(
           json.view.private_metadata
-        );
+        ) as AnnouncementUpdateInfo;
         context = {
           username: json.user.username,
-          text: `${date} ${response}`,
-          command: Command.out
+          text: `${parsedUpdateInfo.eventInfo.dateForColumnLocator} ${response}`,
+          command: SlashCommand.out
         };
         responseInfo = {
           toUrl: SLACK_SEND_EPHEMERAL_URL,
@@ -82,20 +81,20 @@ function doPost(e: PostContent): GoogleAppsScript.Content.TextOutput {
       // from slash command
       switch (e.parameter.command) {
         case "/in":
-          context.command = Command.in;
+          context.command = SlashCommand.in;
           break;
         case "/out":
-          context.command = Command.out;
+          context.command = SlashCommand.out;
           break;
         case "/announce":
-          context.command = Command.announce;
+          context.command = SlashCommand.announce;
           break;
         case "/h":
-          context.command = Command.help;
+          context.command = SlashCommand.help;
           break;
         default:
           // should never happen
-          context.command = Command.none;
+          return sendResponse(FAILURE_RESPONSE + "unimplemented slash command");
       }
       context.username = e.parameter.user_name;
       context.text = e.parameter.text;
@@ -103,13 +102,16 @@ function doPost(e: PostContent): GoogleAppsScript.Content.TextOutput {
         "Context after processing: " + JSON.stringify(context, undefined, 2)
       );
     }
-    if (context.command === Command.in || context.command === Command.out) {
+    if (
+      context.command === SlashCommand.in ||
+      context.command === SlashCommand.out
+    ) {
       return handleInOut(context, sheet, responseInfo, () =>
         updateAnnouncement(updateInfo, sheet)
       );
-    } else if (context.command === Command.announce) {
+    } else if (context.command === SlashCommand.announce) {
       return handleAnnounce(context, sheet);
-    } else if (context.command === Command.help) {
+    } else if (context.command === SlashCommand.help) {
       return sendResponse(HELP_TEXT);
     }
   }
@@ -146,10 +148,17 @@ function sendResponse(
       },
       payload: JSON.stringify(payload)
     };
-    let response = UrlFetchApp.fetch(responseInfo.toUrl, options);
-    console.log("Response to message post: " + response);
+    UrlFetchApp.fetch(responseInfo.toUrl, options);
+    console.log("Posted response message");
     return ContentService.createTextOutput("");
   } else {
+    console.log("Sending response");
     return ContentService.createTextOutput(text);
   }
+}
+
+function doGet(e: any): GoogleAppsScript.Content.TextOutput {
+  return ContentService.createTextOutput(
+    "Nothing here. This is a Slack app only!"
+  );
 }

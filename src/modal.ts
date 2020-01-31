@@ -6,12 +6,8 @@
  * @param date the date of the practice the user is missing
  * @param updateInfo the info needed to update the announcement message after submission of the modal
  */
-function openModal(
-  trigger: string,
-  date: string,
-  updateInfo: AnnouncementUpdateInfo
-): void {
-  var payload = {
+function openModal(trigger: string, updateInfo: AnnouncementUpdateInfo): void {
+  const payload = {
     trigger_id: trigger,
     view: {
       type: "modal",
@@ -31,7 +27,7 @@ function openModal(
         text: "Cancel",
         emoji: true
       },
-      private_metadata: JSON.stringify({ date, ...updateInfo }),
+      private_metadata: JSON.stringify(updateInfo),
       blocks: [
         {
           type: "input",
@@ -55,7 +51,7 @@ function openModal(
       ]
     }
   };
-  var options: GoogleAppsScript.URL_Fetch.URLFetchRequestOptions = {
+  const options: GoogleAppsScript.URL_Fetch.URLFetchRequestOptions = {
     method: "post",
     contentType: "application/json",
     headers: {
@@ -63,6 +59,6 @@ function openModal(
     },
     payload: JSON.stringify(payload)
   };
-  var response = UrlFetchApp.fetch(SLACK_OPEN_MODAL_URL, options);
-  console.log("Response to modal post: " + response);
+  UrlFetchApp.fetch(SLACK_OPEN_MODAL_URL, options);
+  console.log("Posted modal");
 }

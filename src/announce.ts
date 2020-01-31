@@ -16,24 +16,29 @@ function handleAnnounce(
   }
   // send announcement
   try {
-    let col = getNextPracticeDateCol(sheet);
     let note = context.text;
     if (note === "help") return sendResponse(ANNOUNCE_HELP_TEXT);
-    let offset = "";
+    const dateStr = getNextPracticeDate(sheet, false) as string;
+    let date = new ColumnLocator();
     if (note.charAt(0) === OFFSET_SPECIFIER_PREFIX) {
       // specified offset
-      offset = note.split(" ")[0];
-      col += getNumberFromOffset(offset);
-      note = note
-        .split(" ")
-        .slice(1)
-        .join(" "); // remove offset from note
-      console.log(
-        `Offset of ${offset} (col is now ${col}); remaining note: ${note}`
-      );
+      const potentialOffset = note.split(" ")[0];
+      date.initialize(dateStr + potentialOffset);
+      if (!date.isValid()) date.initialize(dateStr);
+      else {
+        // valid offset, remove it from note
+        note = note
+          .split(" ")
+          .slice(1)
+          .join(" ");
+        console.log(`Offset of ${potentialOffset}; remaining note: ${note}`);
+      }
+    } else {
+      date.initialize(dateStr);
     }
-    let eventDescription = getEventDescriptionForCol(sheet, col);
-    sendAnnouncement(sheet, col, note, offset);
+    const col = getDateCol(date, sheet);
+    const eventDescription = getEventDescriptionForCol(sheet, col);
+    sendAnnouncement(sheet, date, note);
     return sendResponse(ANNOUNCE_SUCCESS_RESPONSE + eventDescription);
   } catch (err) {
     return sendResponse(ANNOUNCE_FAILURE_RESPONSE + (err.message || err));
@@ -110,7 +115,7 @@ function makeAnnouncementBlocks(eventInfo: EventInfo): Array<SlackBlock> {
       elements: [
         {
           type: "button",
-          action_id: "in " + eventInfo.eventDate + eventInfo.offset,
+          action_id: "in " + eventInfo.dateForColumnLocator,
           text: {
             type: "plain_text",
             emoji: true,
@@ -121,7 +126,7 @@ function makeAnnouncementBlocks(eventInfo: EventInfo): Array<SlackBlock> {
         },
         {
           type: "button",
-          action_id: "out " + eventInfo.eventDate + eventInfo.offset,
+          action_id: "out " + eventInfo.dateForColumnLocator,
           text: {
             type: "plain_text",
             emoji: true,
@@ -145,11 +150,11 @@ function updateAnnouncement(
   updateInfo: AnnouncementUpdateInfo,
   sheet: GoogleAppsScript.Spreadsheet.Sheet
 ): void {
-  if (updateInfo === undefined) return;
+  if (typeof updateInfo === "undefined") return;
   let eventInfo = updateInfo.eventInfo;
   // get user info, set up avatars array
   let userAvatar = getUserAvatarUrl(updateInfo.userId);
-  if (eventInfo.userAvatars == undefined) {
+  if (typeof eventInfo.userAvatars === "undefined") {
     eventInfo.userAvatars = [];
   }
   const userIndexInList = eventInfo.userAvatars.indexOf(userAvatar);
@@ -164,8 +169,9 @@ function updateAnnouncement(
     eventInfo.userAvatars.shift();
   }
   // update event count
-  const dateWithYear = `${eventInfo.eventDate}/${new Date().getFullYear()}`;
-  const col = getDateCol(dateWithYear + eventInfo.offset, sheet);
+  const date = new ColumnLocator();
+  date.initialize(eventInfo.dateForColumnLocator);
+  const col = getDateCol(date, sheet);
   // expensive but worth it to allow up-to-date announcement message
   eventInfo.count = parseInt(sheet.getRange(COUNT_ROW, col).getDisplayValue());
 
@@ -196,16 +202,16 @@ function updateAnnouncement(
  */
 function sendAnnouncement(
   sheet: GoogleAppsScript.Spreadsheet.Sheet,
-  col: number,
-  note: string,
-  offset: string
+  date: ColumnLocator,
+  note: string
 ): void {
   // collect event data
+  const col = getDateCol(date, sheet);
   let eventInfo: EventInfo = {
     ...getEventInfoFromCol(sheet, col),
     userAvatars: [],
-    note,
-    offset
+    dateForColumnLocator: date.toString(),
+    note
   };
   // strip year from event date
   eventInfo.eventDate = eventInfo.eventDate.substring(
@@ -226,6 +232,6 @@ function sendAnnouncement(
     },
     payload: JSON.stringify(payload)
   };
-  let response = UrlFetchApp.fetch(SLACK_SEND_MESSAGE_URL, options);
-  console.log("Response to message post: " + response);
+  UrlFetchApp.fetch(SLACK_SEND_MESSAGE_URL, options);
+  console.log("Posted announcement");
 }

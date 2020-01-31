@@ -6,7 +6,7 @@
 interface ResponseContext {
   username: string;
   text: string;
-  command: Command;
+  command: SlashCommand;
 }
 
 interface ResponseCustomization {
@@ -25,7 +25,7 @@ interface EventInfo {
   note?: string;
   count?: number;
   userAvatars?: Array<string>;
-  offset?: string;
+  dateForColumnLocator?: string; // must be from toString of ColumnLocator
   includeTimeLoc?: boolean; // used to check if background is not white in spreadsheet access
 }
 
