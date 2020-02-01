@@ -8,5 +8,5 @@
   },
 
   "extends": "./tsconfig.json",
-  "exclude": ["src/Google"]
+  "exclude": ["src/Heroku"]
 }
