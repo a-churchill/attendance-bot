@@ -1,17 +1,19 @@
 {
-  "name": "attendance-bot-gas",
+  "name": "attendance-bot-heroku",
   "version": "1.0.0",
   "description": "AttendanceBot for MIT Ultimate",
   "main": "main.ts",
   "dependencies": {
-    "@types/google-apps-script": "^1.0.10"
+    "@types/express": "^4.17.2",
+    "@types/google-apps-script": "^1.0.10",
+    "express": "^4.17.1"
   },
   "devDependencies": {
     "typescript": "^3.5.2"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build-ts": "tsc",
+    "build-ts": "tsc --outFile dist/app.js",
     "postinstall": "npm run build-ts",
     "start": "npm run serve",
     "serve": "node dist/app.js",

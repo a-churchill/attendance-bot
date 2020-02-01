@@ -5,3 +5,6 @@
 details.txt
 node_modules/
 built/
+/Heroku/dist
+npm-debug.log
+todo

@@ -1,5 +1,5 @@
 {
-  "name": "attendance-bot",
+  "name": "attendance-bot-google",
   "version": "1.0.0",
   "description": "AttendanceBot for MIT Ultimate",
   "main": "main.ts",

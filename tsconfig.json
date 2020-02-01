@@ -4,7 +4,9 @@
     "allowJs": true,
     "checkJs": true,
     "experimentalDecorators": true,
-    "types": ["google-apps-script"]
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "esModuleInterop": true
   },
-  "include": ["./**/*"]
+  "include": ["src"]
 }

@@ -6,5 +6,7 @@
     "experimentalDecorators": true,
     "types": ["google-apps-script"]
   },
-  "include": ["./**/*"]
+
+  "extends": "./tsconfig.json",
+  "exclude": ["src/Google"]
 }
