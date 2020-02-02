@@ -4,9 +4,10 @@
     "allowJs": true,
     "checkJs": true,
     "experimentalDecorators": true,
-    "types": ["google-apps-script"]
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "esModuleInterop": true
   },
-
-  "extends": "./tsconfig.json",
-  "exclude": ["src/Heroku"]
+  "include": ["src"],
+  "exclude": ["dist"]
 }

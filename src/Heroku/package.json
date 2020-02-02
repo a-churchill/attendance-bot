@@ -5,15 +5,14 @@
   "main": "app.ts",
   "dependencies": {
     "@types/express": "^4.17.2",
-    "@types/google-apps-script": "^1.0.10",
     "express": "^4.17.1"
   },
   "devDependencies": {
-    "typescript": "^3.5.2"
+    "typescript": "^3.7.5"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build-ts": "tsc --outFile dist/app.js",
+    "build-ts": "tsc --outDir dist",
     "postinstall": "npm run build-ts",
     "start": "npm run serve",
     "serve": "node dist/app.js",
@@ -25,7 +24,7 @@
     "type": "git"
   },
   "engines": {
-    "node": "8.10.0"
+    "node": "12.14.1"
   },
   "author": "Andrew Churchill",
   "license": "ISC"
