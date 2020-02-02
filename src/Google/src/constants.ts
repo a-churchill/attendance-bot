@@ -20,7 +20,7 @@ const ANNOUNCE_PICTURE_URL =
 const REASON_BLOCK_ID = "reason_block";
 const REASON_ACTION_ID = "reason_action";
 const GITHUB_ISSUE_URL =
-  "https://github.com/xxaxdxcxx/attendance-bot/issues/new";
+  "https://github.com/a-churchill/attendance-bot/issues/new";
 const OFFSET_SPECIFIER_PREFIX = "#";
 
 // cache configuration

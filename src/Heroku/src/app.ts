@@ -9,5 +9,9 @@ if (port == null || port == "") {
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
 app.get("/", (req: Request, res: Response) => {
-  res.status(200).json("Success");
+  res.status(200).send("This is just a Slack app. Nothing here!");
+});
+
+app.post("/slash", (req: Request, res: Response) => {
+  console.log("Request: ", JSON.stringify(req, undefined, 2));
 });

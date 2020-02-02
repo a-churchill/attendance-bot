@@ -5,6 +5,7 @@
 details.txt
 node_modules/
 built/
-/Heroku/dist
+dist/
 npm-debug.log
 todo
+.env
