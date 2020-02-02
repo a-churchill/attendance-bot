@@ -17,7 +17,8 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.post("/slash", (req: Request, res: Response) => {
-  console.log("API token: ", API_TOKEN);
+  console.log("Testing (current sheet): " + CURRENT_SHEET);
+  console.log("API token: " + API_TOKEN);
   console.log("Got slash req: ", JSON.stringify(req.body, undefined, 2));
   res.status(200).send("Got the slash command!");
 });
