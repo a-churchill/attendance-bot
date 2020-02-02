@@ -1,4 +1,4 @@
-import { Express, Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import express = require("express");
 import bodyParser = require("body-parser");
 
@@ -17,8 +17,12 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.post("/slash", (req: Request, res: Response) => {
-  console.log("Request: ", req);
-  console.log("Request query: ", JSON.stringify(req.query));
-  console.log("Request body: ", JSON.stringify(req.body));
+  console.log("API token: ", API_TOKEN);
+  console.log("Got slash req: ", JSON.stringify(req.body, undefined, 2));
   res.status(200).send("Got the slash command!");
+});
+
+app.post("/interactive", (req: Request, res: Response) => {
+  console.log("Got interactive req: ", JSON.stringify(req.body, undefined, 2));
+  res.status(200).send("");
 });
