@@ -13,6 +13,6 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.post("/slash", (req: Request, res: Response) => {
-  console.log("Request body: ", JSON.stringify(req.body));
+  console.log("Request body: ", JSON.stringify(req.query));
   res.status(200).send("Got the slash command!");
 });
