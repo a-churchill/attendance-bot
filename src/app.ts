@@ -13,5 +13,5 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.post("/slash", (req: Request, res: Response) => {
-  console.log("Request: ", JSON.stringify(req, undefined, 2));
+  console.log("Request body: ", JSON.stringify(req.body, undefined, 2));
 });
