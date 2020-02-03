@@ -5,24 +5,16 @@
  * @param context information from user's response
  * @param sheet current sheet
  * @param responseInfo customization for where to send eventual response
- * @param afterSuccessfulChange function called after sheet updated successfully
  */
 function handleInOut(
-  context: ResponseContext,
-  sheet: GoogleAppsScript.Spreadsheet.Sheet,
-  responseInfo: ResponseCustomization,
-  afterSuccessfulChange: Function
-): GoogleAppsScript.Content.TextOutput {
+  userStatus: UserStatus,
+  sheet: GoogleAppsScript.Spreadsheet.Sheet
+): string {
   // collect data from slash command
-  let username = context.username;
-  let dateStr = context.text.split(" ")[0]; // if first word is not date, handled below
-  let reason =
-    context.text
-      .split(" ")
-      .slice(1)
-      .join(" ") || ""; // every word but first, or empty if 0/1 words
-  let userIn = context.command === SlashCommand.in;
-  let offset = 0;
+  let username = userStatus.user;
+  let dateStr = userStatus.date;
+  let reason = userStatus.comment || "";
+  let userIn = userStatus.userIn;
 
   // flags for whether to add various alerts after response
   let spreadsheetUnchanged = false;
@@ -31,20 +23,19 @@ function handleInOut(
   let addNoteAddedAlert = false;
   let addBlackedOutAlert = false;
 
-  console.log(`User ${username}: ${context.command} ${dateStr} ${reason}`);
+  console.log(`User ${username}: in=${userIn} ${dateStr} ${reason}`);
 
   // handle date
   let date = new ColumnLocator();
   const parseResult = date.initialize(dateStr);
   if (parseResult === DateParseResult.addToReason) {
-    // invalid date; will be added to reason, and date.isValid() is false
-    reason = dateStr.length > 0 ? dateStr + " " + reason : reason;
+    throw "invalid date";
   }
 
   // ensure user input is valid:
   if (!userIn && reason.length == 0) {
     // trying to /out without a reason SMH
-    return sendResponse(FAILURE_RESPONSE + NO_REASON_ERROR, responseInfo);
+    return FAILURE_RESPONSE + NO_REASON_ERROR;
   }
 
   // fetch info, update spreadsheet
@@ -71,7 +62,7 @@ function handleInOut(
     colUpdated = col;
   } catch (err) {
     console.log("Error updating spreadsheet: ", err);
-    return sendResponse(FAILURE_RESPONSE + (err.message || err), responseInfo);
+    return FAILURE_RESPONSE + (err.message || err);
   }
 
   // check if the update is coming pretty late (after 10pm day before), or for past event
@@ -104,9 +95,7 @@ function handleInOut(
       reason +
       '" to your cell';
   }
-  afterSuccessfulChange();
-  return sendResponse(
-    (spreadsheetUnchanged ? NO_CHANGE_RESPONSE : SUCCESS_RESPONSE) + response,
-    responseInfo
-  );
+  const finalResponse =
+    (spreadsheetUnchanged ? NO_CHANGE_RESPONSE : SUCCESS_RESPONSE) + response;
+  return finalResponse;
 }

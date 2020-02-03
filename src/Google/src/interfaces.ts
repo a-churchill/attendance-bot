@@ -37,7 +37,7 @@ interface AnnouncementUpdateInfo {
 }
 
 interface PostContent {
-  parameter: SlackSlashCommandInfo | { payload: string };
+  parameter: UserStatus;
   contextPath: string;
   contentLength: number;
   queryString: string;
@@ -50,6 +50,21 @@ interface PostContent {
     contents: string;
     name: string;
   };
+}
+
+interface GetContent {
+  queryString?: string;
+  parameter: {
+    method: string;
+    value: string;
+  };
+}
+
+interface UserStatus {
+  user: string;
+  userIn: boolean;
+  date: string;
+  comment: string;
 }
 
 interface SlackSlashCommandInfo {

@@ -6,6 +6,8 @@ const ANNOUNCE_CHANNEL_ID = TESTING ? "CT2197CMP" : "C03D3MVC6"; // testing-atte
 const API_TOKEN = PropertiesService.getScriptProperties().getProperty(
   TESTING ? "API_TOKEN_TESTING" : "API_TOKEN"
 );
+const GOOGLE_EVENT_INFO_NAME = "event-info";
+const GOOGLE_EVENT_COUNT_NAME = "event-count";
 const SLACK_SEND_MESSAGE_URL = "https://slack.com/api/chat.postMessage";
 const SLACK_OPEN_MODAL_URL = "https://slack.com/api/views.open";
 const SLACK_SEND_EPHEMERAL_URL = "https://slack.com/api/chat.postEphemeral";

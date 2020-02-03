@@ -1,1 +1,0 @@
-web: src/Heroku/dist/app.js

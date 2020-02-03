@@ -1,4 +1,4 @@
-enum SlashCommand {
+export enum SlashCommand {
   in,
   out,
   announce,
@@ -6,7 +6,7 @@ enum SlashCommand {
   none
 }
 
-enum DateParseResult {
+export enum DateParseResult {
   success,
   addToReason
 }

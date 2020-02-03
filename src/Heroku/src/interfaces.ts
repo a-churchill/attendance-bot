@@ -1,42 +1,56 @@
+import * as Enums from "./Enums";
+
 /**
  * Represents information gleaned from user interaction. May include unprocessed
  * information (e.g. text can have both date and reason in it, date in text can
  * still have offset attached)
  */
-interface ResponseContext {
+export interface ResponseContext {
   username: string;
   text: string;
-  command: SlashCommand;
+  command: Enums.SlashCommand;
 }
 
-interface ResponseCustomization {
-  userId?: string;
-  toUrl?: string;
+export interface GoogleResponse<T> {
+  ok: boolean;
+  payload: T;
+}
+
+export interface ResponseCustomization {
+  userId: string;
+  toUrl: string;
+}
+
+export interface UserStatus {
+  user: string;
+  userIn: boolean;
+  date: string;
+  comment: string;
 }
 
 /**
  * Represents information about an event. Should always be ready to present to user.
  */
-interface EventInfo {
+export interface EventInfo {
   eventType: string;
   eventTime: string;
   eventDate: string;
   eventLocation: string;
+  count: number;
   note?: string;
-  count?: number;
   userAvatars?: Array<string>;
   dateForColumnLocator?: string; // must be from toString of ColumnLocator
   includeTimeLoc?: boolean; // used to check if background is not white in spreadsheet access
 }
 
-interface AnnouncementUpdateInfo {
+export interface AnnouncementUpdateInfo {
   eventInfo: EventInfo;
   userId: string;
   messageTimestamp: string;
   addUser: boolean;
 }
 
-interface PostContent {
+export interface PostContent {
   parameter: SlackSlashCommandInfo | { payload: string };
   contextPath: string;
   contentLength: number;
@@ -52,7 +66,7 @@ interface PostContent {
   };
 }
 
-interface SlackSlashCommandInfo {
+export interface SlackSlashCommandInfo {
   channel_name: string;
   user_id: string;
   user_name: string;
@@ -66,7 +80,7 @@ interface SlackSlashCommandInfo {
   response_url: string;
 }
 
-interface SlackMessagePayload {
+export interface SlackMessagePayload {
   type: string;
   team: SlackTeamInfo;
   user: SlackUserInfo;
@@ -81,7 +95,7 @@ interface SlackMessagePayload {
   actions: Array<SlackActions>;
 }
 
-interface SlackActions {
+export interface SlackActions {
   action_id: string;
   block_id: string;
   text: SlackTextInfo;
@@ -91,7 +105,7 @@ interface SlackActions {
   action_ts: string;
 }
 
-interface SlackMessageResponseInfo {
+export interface SlackMessageResponseInfo {
   bot_id: string;
   type: string;
   text: string;
@@ -101,7 +115,7 @@ interface SlackMessageResponseInfo {
   blocks: Array<SlackBlock>;
 }
 
-interface SlackMessageSendInfo {
+export interface SlackMessageSendInfo {
   text: string;
   channel: string;
   user?: string;
@@ -111,19 +125,19 @@ interface SlackMessageSendInfo {
   replace_original?: boolean;
 }
 
-interface SlackMessageUpdateInfo {
+export interface SlackMessageUpdateInfo {
   text: string;
   channel: string;
   ts: string;
   blocks?: Array<SlackBlock>;
 }
 
-interface SlackUserRequestInfo {
+export interface SlackUserRequestInfo {
   ok: string;
   user: SlackFullUserInfo;
 }
 
-interface SlackFullUserInfo {
+export interface SlackFullUserInfo {
   id: string;
   team_id: string;
   name: string;
@@ -169,12 +183,12 @@ interface SlackFullUserInfo {
   updated: number;
 }
 
-interface SlackChannelInfo {
+export interface SlackChannelInfo {
   id: string;
   name: string;
 }
 
-interface SlackView {
+export interface SlackView {
   type: string;
   callback_id: string;
   title: SlackTextInfo;
@@ -198,26 +212,26 @@ interface SlackView {
   bot_id?: string;
 }
 
-interface SlackContainerInfo {
+export interface SlackContainerInfo {
   type: string;
   message_ts: string;
   channel_id: string;
   is_ephemeral: boolean;
 }
 
-interface SlackTeamInfo {
+export interface SlackTeamInfo {
   id: string;
   domain: string;
 }
 
-interface SlackUserInfo {
+export interface SlackUserInfo {
   id: string;
   username: string;
   name: string;
   team_id: string;
 }
 
-interface SlackBlock {
+export interface SlackBlock {
   type: string;
   text?: SlackTextInfo;
   accessory?: SlackImageInfo;
@@ -227,14 +241,14 @@ interface SlackBlock {
   elements?: Array<SlackImageInfo | SlackButtonInfo | SlackContextInfo>;
 }
 
-interface SlackInputInfo {
+export interface SlackInputInfo {
   type: string;
   placeholder: SlackTextInfo;
   multiline: boolean;
   action_id: string;
 }
 
-interface SlackImageInfo {
+export interface SlackImageInfo {
   type: string;
   image_url: string;
   alt_text: string;
@@ -244,7 +258,7 @@ interface SlackImageInfo {
   image_bytes?: number;
 }
 
-interface SlackContextInfo {
+export interface SlackContextInfo {
   type: string;
   emoji?: boolean;
   text?: string;
@@ -252,13 +266,13 @@ interface SlackContextInfo {
   alt_text?: string;
 }
 
-interface SlackTextInfo {
+export interface SlackTextInfo {
   type: string;
   text: string;
   emoji?: boolean;
 }
 
-interface SlackButtonInfo {
+export interface SlackButtonInfo {
   type: string;
   action_id: string;
   text: SlackTextInfo;
