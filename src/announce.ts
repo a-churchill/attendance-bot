@@ -260,7 +260,5 @@ function sendAnnouncement(originalEventInfo: Types.EventInfo): void {
     }
   })
     .then(res => res.json())
-    .then(json =>
-      console.log("Announcement post response: " + JSON.stringify(json))
-    );
+    .then(json => console.log("Announcement post response received"));
 }

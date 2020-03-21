@@ -6,8 +6,9 @@ import * as Constants from "./constants";
 import * as Enums from "./enums";
 import * as Types from "./interfaces";
 import { handleInOut } from "./io";
-import { handleAnnounce } from "./announce";
+import { handleAnnounce, updateAnnouncement } from "./announce";
 import { getSlashCommand } from "./text";
+import { handleBlockAction, handleViewSubmission } from "./interactive";
 
 const app = express();
 let port = process.env.PORT as unknown;
@@ -31,13 +32,12 @@ app.get("/", (_, res: Response) => {
 
 app.post("/slash", (req: Request, res: Response) => {
   console.log("Got slash req: ", JSON.stringify(req.body, undefined, 2));
-  const response = handleSlashCommandPost(req.body);
-  res.send(response);
+  handleSlashCommandPost(req.body);
 });
 
 app.post("/interactive", (req: Request, res: Response) => {
-  console.log("Got interactive req: ", JSON.stringify(req.body, undefined, 2));
-  res.status(200).send("");
+  console.log("Got interactive req");
+  handleInteractivePost(req.body);
 });
 
 // credit to https://davidwalsh.name/using-slack-slash-commands-to-send-data-from-slack-into-google-sheets
@@ -84,79 +84,24 @@ function handleSlashCommandPost(body: Types.SlackSlashCommandInfo): void {
 }
 
 /**
- * This method is called any time a POST request from an interactive event is sent to this script's URL.
- * It handles the post request and sends the appropriate response to the user.
+ * This method is called any time a POST request from an interactive event is
+ * sent to this script's URL. It handles the post request and sends the
+ * appropriate response to the user.
  *
  * @param body parameters from post request
  */
-// function handleInteractivePost(body: Types.SlackSlashCommandInfo): void {
-
-//   // data to fetch from command, to pass to spreadsheet handlers
-//   let context: Types.ResponseContext = {
-//     username: "",
-//     text: "",
-//     command: Enums.SlashCommand.none
-//   };
-//   let responseInfo: Types.ResponseCustomization = {
-//     toUrl: "",
-//     userId: ""
-//   };
-//   let updateInfo: Types.AnnouncementUpdateInfo = undefined;
-//   // from button click or modal response
-//   console.log("Response to button click");
-//   let payload = body.payload;
-//   let json: SlackMessagePayload = JSON.parse(payload);
-//   if (json.type === "block_actions") {
-//     updateInfo = {
-//       eventInfo: JSON.parse(json.actions[0].value),
-//       userId: json.user.id,
-//       messageTimestamp: json.container.message_ts,
-//       addUser: true
-//     };
-//     // clicked button in message
-//     // simulate slash command request
-//     if (json.actions[0].text.text === "In") {
-//       // in button clicked
-//       // user in
-//       console.log("User clicked in");
-//       context = {
-//         username: json.user.username,
-//         text: updateInfo.eventInfo.dateForColumnLocator, // date
-//         command: Enums.SlashCommand.in
-//       };
-//       responseInfo.toUrl = json.response_url;
-//     } else {
-//       // user out
-//       console.log("User clicked out");
-//       // set up modal, exit
-//       updateInfo.addUser = false;
-//       let trigger = json.trigger_id;
-//       openModal(trigger, updateInfo, sheet);
-//       return;
-//     }
-//   } else if (json.type === "view_submission") {
-//     // modal submission; start by getting details
-//     console.log("User submitted modal response");
-//     // create out response
-//     let response: string =
-//       json.view.state.values[Constants.REASON_BLOCK_ID][
-//         Constants.REASON_ACTION_ID
-//       ].value;
-//     let parsedUpdateInfo = JSON.parse(
-//       json.view.private_metadata
-//     ) as Types.AnnouncementUpdateInfo;
-//     context = {
-//       username: json.user.username,
-//       text: `${parsedUpdateInfo.eventInfo.dateForColumnLocator} ${response}`,
-//       command: Enums.SlashCommand.out
-//     };
-//     responseInfo = {
-//       toUrl: Constants.SLACK_SEND_EPHEMERAL_URL,
-//       userId: json.user.id
-//     };
-//     updateInfo = parsedUpdateInfo;
-//   }
-// }
+function handleInteractivePost(body: Types.SlackInteractiveInfo): void {
+  console.log("Response to button click");
+  let payload = body.payload;
+  let json: Types.SlackMessagePayload = JSON.parse(payload);
+  if (json.type === "block_actions") {
+    // clicked button in message
+    handleBlockAction(json);
+  } else if (json.type === "view_submission") {
+    // modal submission;
+    handleViewSubmission(json);
+  }
+}
 
 /**
  * Sends a response with the given text as an ephemeral message to that URL
