@@ -1,5 +1,5 @@
 import Redis = require("ioredis");
-import * as Constants from "./Constants";
+import * as Constants from "./constants";
 
 const redis = new Redis(process.env.REDIS_URL);
 

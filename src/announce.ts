@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import * as Constants from "./Constants";
+import * as Constants from "./constants";
 import * as Types from "./interfaces";
 import { sendResponse } from "./app";
 import { getEventInfo, getEventCount } from "./spreadsheet";

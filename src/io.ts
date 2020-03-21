@@ -1,5 +1,5 @@
-import * as Constants from "./Constants";
-import * as Enums from "./Enums";
+import * as Constants from "./constants";
+import * as Enums from "./enums";
 import * as Types from "./interfaces";
 import { ColumnLocator } from "./text";
 import { sendResponse } from "./app";
