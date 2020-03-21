@@ -38,7 +38,8 @@ function getUserRow(
 }
 
 /**
- * Gets the column of the given column locator (date and offset). Throws error
+ * Gets the column of the given column locator (date and offset). If column
+ * locator is null, returns column of next practice date. Throws error
  * if date not found, with error message explaining helpfully.
  * @param date the column locator (date and offset) to access
  * @param sheet current sheet

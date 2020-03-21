@@ -29,7 +29,7 @@ function handleInOut(
   let date = new ColumnLocator();
   const parseResult = date.initialize(dateStr);
   if (parseResult === DateParseResult.addToReason) {
-    throw "invalid date";
+    console.log(`Invalid date ${dateStr}`);
   }
 
   // ensure user input is valid:

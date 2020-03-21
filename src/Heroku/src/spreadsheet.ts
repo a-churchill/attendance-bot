@@ -7,7 +7,7 @@ import { tryGetCache } from "./cache";
 
 /**
  * Gets the event info from the spreadsheet (all required fields) wrapped in GoogleResponse
- * @param date date of event info to get
+ * @param date date of event info to get; if null, gets info for next event
  * @param process function called on resulting event info
  */
 export async function getEventInfo(date: ColumnLocator | null) {

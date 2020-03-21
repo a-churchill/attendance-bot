@@ -164,6 +164,8 @@ function doPost(e: PostContent): GoogleAppsScript.Content.TextOutput {
   try {
     const result = handleInOut(JSON.parse(e.postData.contents), sheet);
     return ContentService.createTextOutput(result);
+  } catch {
+    return ContentService.createTextOutput("Error with handling in/out");
   }
 }
 
@@ -171,7 +173,7 @@ function doGet(e: GetContent): GoogleAppsScript.Content.TextOutput {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName(CURRENT_SHEET);
   try {
-    if (e.parameter.method === GOOGLE_EVENT_INFO_NAME) {
+    if (e.parameter.method === GOOGLE_EVENT_COUNT_NAME) {
       const date = e.parameter.value as string;
       const dateObj = new ColumnLocator();
       const result = dateObj.initialize(date);
@@ -196,11 +198,30 @@ function doGet(e: GetContent): GoogleAppsScript.Content.TextOutput {
           )
         })
       );
-    } else if (e.parameter.method === GOOGLE_EVENT_COUNT_NAME) {
+    } else if (e.parameter.method === GOOGLE_EVENT_INFO_NAME) {
       const date = e.parameter.value as string;
       const dateObj = new ColumnLocator();
       dateObj.initialize(date);
-      if (!dateObj.isValid()) throw "invalid date string " + date;
+      if (!dateObj.isValid() && date.length > 0)
+        throw "invalid date string " + date;
+
+      try {
+        let dateCol = getDateCol(dateObj, sheet);
+        const eventInfo = getEventInfoFromCol(sheet, dateCol);
+        return ContentService.createTextOutput(
+          JSON.stringify({
+            ok: true,
+            payload: eventInfo
+          })
+        );
+      } catch {
+        return ContentService.createTextOutput(
+          JSON.stringify({
+            ok: false,
+            payload: `Error getting event info for date ${date}`
+          })
+        );
+      }
     } else {
       return ContentService.createTextOutput(
         JSON.stringify({ ok: false, payload: "invalid method name" })
