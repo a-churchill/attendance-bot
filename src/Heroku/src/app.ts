@@ -20,8 +20,9 @@ app.use(bodyParser.urlencoded());
 app.use(bodyParser.text());
 app.use((req: Request, res: Response, next: NextFunction) => {
   // send acknowledgement response, before message info
-  console.log(`Acknowledging request ${req.query}`);
-  // res.status(200).send("");
+  console.log(`Acknowledging request to ${req.url}`);
+  res.status(200).send("");
+  next();
 });
 
 app.get("/", (_, res: Response) => {
