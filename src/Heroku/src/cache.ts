@@ -15,7 +15,7 @@ export async function tryGetCache(
   onMiss: Promise<string>,
   duration = Constants.CACHE_DURATION
 ) {
-  const newKey = key + Constants.TESTING ? "_test" : "";
+  const newKey = key + (Constants.TESTING ? "_test" : "");
   return await redis.get(newKey).then(async (value: string) => {
     if (value) {
       // middleware, logs cache hit/miss
