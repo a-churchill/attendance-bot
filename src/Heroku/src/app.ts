@@ -20,8 +20,8 @@ app.use(bodyParser.urlencoded());
 app.use(bodyParser.text());
 app.use((req: Request, res: Response, next: NextFunction) => {
   // send acknowledgement response, before message info
-  console.log(`Acknowledging request to ${req.url}`);
-  res.status(200).send("");
+  console.log(`Acknowledging request to ${req.url} with method ${req.method}`);
+  if (req.method === "POST") res.status(200).send("");
   next();
 });
 
@@ -32,7 +32,7 @@ app.get("/", (_, res: Response) => {
 app.post("/slash", (req: Request, res: Response) => {
   console.log("Got slash req: ", JSON.stringify(req.body, undefined, 2));
   const response = handleSlashCommandPost(req.body);
-  res.status(200).send(response);
+  res.send(response);
 });
 
 app.post("/interactive", (req: Request, res: Response) => {
