@@ -80,6 +80,10 @@ export interface SlackSlashCommandInfo {
   response_url: string;
 }
 
+export interface SlackInteractiveInfo {
+  payload: string;
+}
+
 export interface SlackMessagePayload {
   type: string;
   team: SlackTeamInfo;

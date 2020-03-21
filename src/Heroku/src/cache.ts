@@ -20,7 +20,6 @@ export async function tryGetCache(
     .then(async (value: string) => {
       if (value) {
         // middleware, logs cache hit/miss
-
         console.log(`Cache hit: for key ${key} got ${value}`);
         return value;
       } else {
