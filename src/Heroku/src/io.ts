@@ -48,6 +48,7 @@ export async function handleInOut(
     comment: reason
   }).then(value => {
     afterSuccessfulChange();
+    sendResponse(value, responseInfo);
     return value;
   });
 }
