@@ -15,21 +15,20 @@ export async function tryGetCache(
   onMiss: Promise<string>,
   duration = Constants.CACHE_DURATION
 ) {
-  return await redis
-    .get(key + Constants.TESTING ? "_test" : "")
-    .then(async (value: string) => {
-      if (value) {
-        // middleware, logs cache hit/miss
-        console.log(`Cache hit: for key ${key} got ${value}`);
+  const newKey = key + Constants.TESTING ? "_test" : "";
+  return await redis.get(newKey).then(async (value: string) => {
+    if (value) {
+      // middleware, logs cache hit/miss
+      console.log(`Cache hit: for key ${newKey} got ${value}`);
+      return value;
+    } else {
+      // cache miss, add value to cache
+      console.log(`Cache miss: for key ${newKey}`);
+      return await onMiss.then((value: string) => {
+        console.log(`Inserting to cache: for key ${newKey} inserting ${value}`);
+        redis.setex(newKey, duration, value);
         return value;
-      } else {
-        // cache miss, add value to cache
-        console.log(`Cache miss: for key ${key}`);
-        return await onMiss.then((value: string) => {
-          console.log(`Inserting to cache: for key ${key} inserting ${value}`);
-          redis.setex(key, duration, value);
-          return value;
-        });
-      }
-    });
+      });
+    }
+  });
 }
