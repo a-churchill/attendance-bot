@@ -20,6 +20,7 @@ app.use(bodyParser.urlencoded());
 app.use(bodyParser.text());
 app.use((req: Request, res: Response, next: NextFunction) => {
   // send acknowledgement response, before message info
+  console.log(`Acknowledging request ${req.body}`);
   res.status(200).send("");
 });
 
