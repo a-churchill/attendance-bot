@@ -1,5 +1,6 @@
 import fetch from "node-fetch";
 import * as Constants from "./constants";
+import * as Types from "./interfaces";
 import { tryGetCache } from "./cache";
 
 /**
@@ -13,7 +14,9 @@ export async function getUserAvatarUrl(userId: string) {
   }&user=${userId}`;
   let cacheResult = await tryGetCache(
     userId,
-    fetch(requestUrl).then(response => response.text()) // on miss
+    fetch(requestUrl)
+      .then(response => response.json())
+      .then((json: Types.SlackUserRequestInfo) => json.user.profile.image_48) // on miss
   );
   return cacheResult;
 }
