@@ -1,4 +1,4 @@
-import * as Enums from "./Enums";
+import * as Enums from "./enums";
 
 /**
  * Represents information gleaned from user interaction. May include unprocessed
