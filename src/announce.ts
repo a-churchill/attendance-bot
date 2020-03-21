@@ -42,7 +42,7 @@ export async function handleAnnounce(
         responseInfo
       );
     }
-    console.log(`GAS response: ${body}`);
+    console.log(`GAS response: ${JSON.stringify(body, null, 2)}`);
     let eventInfo = { note: note, ...body.payload };
     let date = new ColumnLocator();
     if (note.charAt(0) === Constants.OFFSET_SPECIFIER_PREFIX) {
@@ -61,7 +61,6 @@ export async function handleAnnounce(
     } else {
       date.initialize(eventInfo.eventDate);
     }
-    console.log(`Initialized date to ${date.toString()}`);
     eventInfo = { dateForColumnLocator: date.toString(), ...eventInfo };
     sendAnnouncement(eventInfo);
     return sendResponse(
