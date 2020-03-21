@@ -3,7 +3,7 @@ import * as Enums from "./enums";
 import * as Types from "./interfaces";
 import { ColumnLocator } from "./text";
 import { sendResponse } from "./app";
-import { setUserStatus } from "./spreadsheet";
+import { setUserStatus, getEventInfo } from "./spreadsheet";
 
 /**
  * Given some user interaction making a change to their attendance status (could
@@ -32,17 +32,18 @@ export async function handleInOut(
   console.log(`User ${username}: ${context.command} ${dateStr} ${reason}`);
 
   // handle date
-  let date = new ColumnLocator();
+  let date: ColumnLocator | null = new ColumnLocator();
   const parseResult = date.initialize(dateStr);
   if (parseResult === Enums.DateParseResult.addToReason) {
     // invalid date; will be added to reason, and date.isValid() is false
     reason = dateStr.length > 0 ? dateStr + " " + reason : reason;
+    date = null;
   }
 
   // update spreadsheet
   return await setUserStatus({
     user: username,
-    date: date.toString(),
+    date: date ? date.toString() : "",
     userIn,
     comment: reason
   }).then(value => {
