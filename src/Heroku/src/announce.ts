@@ -36,7 +36,9 @@ export async function handleAnnounce(
       // request failed
       const errorMessage = body.payload as unknown;
       return sendResponse(
-        Constants.ANNOUNCE_FAILURE_RESPONSE + " " + errorMessage,
+        Constants.ANNOUNCE_FAILURE_RESPONSE +
+          "(fetching next date) " +
+          errorMessage,
         responseInfo
       );
     }
@@ -66,7 +68,9 @@ export async function handleAnnounce(
     );
   } catch (err) {
     return sendResponse(
-      Constants.ANNOUNCE_FAILURE_RESPONSE + (err.message || err),
+      Constants.ANNOUNCE_FAILURE_RESPONSE +
+        "(error in announce code) " +
+        (err.message || err),
       responseInfo
     );
   }
