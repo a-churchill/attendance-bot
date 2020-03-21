@@ -61,7 +61,7 @@ async function sendGetRequest(method: string, value: string) {
       method: "GET"
     }
   );
-  console.log(`Got response to ${method} call: ${response.text()}`);
+  console.log(`Got response to ${method} call`);
   return response.text();
 }
 
