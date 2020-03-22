@@ -24,7 +24,7 @@ And AttendanceBot gives helpful feedback to the user, giving them usage hints an
 
 ![feedback message](https://github.com/xxaxdxcxx/attendance-bot/raw/master/imgs/feedback-message.png "Feedback to user")
 
-AttendanceBot is written entirely in TypeScript, and it is hosted by the Google Apps Script service. The platform sends POST requests to the `doPost` function, and exposes the API for updating the spreadsheet itself.
+AttendanceBot is written entirely in TypeScript, and it is hosted primarily on Heroku, as well as a component on the Google Apps Script service. The platform sends POST requests to the `express` app in the `Heroku` directory, which handles the different possible inputs. To get information or update the spreadsheet, the Heroku app will send requests to the Google Apps Script portion, in the `Google` directory.
 
 ## Assumptions about External Services
 
@@ -36,9 +36,18 @@ AttendanceBot pulls all of its data from the attendance spreadsheet we already u
 - One column (which can be hidden) holds each player's Slack username in their corresponding row.
 - The event information changes fairly infrequently (event information is cached for about 30 minutes after any cache miss). _Note: changes to the number of people coming are not cached, to ensure accuracy._
 
+### Heroku
+
+The bulk of the logic is deployed to Heroku. The Slack app needs to be pointed at the correct URL of the Heroku project.
+
+The Heroku app needs some configuration:
+
+- The [Node.js buildpack](https://elements.heroku.com/buildpacks/heroku/heroku-buildpack-nodejs) needs to be installed
+- The `API_TOKEN`, `API_TOKEN_TESTING`, `TESTING`, and `REDIS_URL` configuration variables need to be defined for the Heroku app
+
 ### Slack
 
-The bot needs the following permissions: [channels:history](https://api.slack.com/scopes/channels:history), [channels:read](https://api.slack.com/scopes/channels:read), [chat:write](https://api.slack.com/scopes/chat:write), [commands](https://api.slack.com/scopes/commands), and [users:read](https://api.slack.com/scopes/commands).
+The bot needs the following permissions: [channels:history](https://api.slack.com/scopes/channels:history), [channels:read](https://api.slack.com/scopes/channels:read), [chat:write](https://api.slack.com/scopes/chat:write), [commands](https://api.slack.com/scopes/commands), and [users:read](https://api.slack.com/scopes/commands). Also, this assumes that the AttendanceBot application is set up so slash commands and interactive commands are sent to the appropriate URLs.
 
 ## Contributing
 
@@ -46,10 +55,27 @@ Contributions and suggestions are welcome! Feel free to [submit an issue](https:
 
 ### Development Instructions
 
+#### Heroku Development
+
+Deploying an app on Heroku is as simple as pushing git references. But because we have the Heroku project in a subfolder of this overall git project, we need to use the git `subtree` feature. First we need to make sure the Heroku remote is set up, like so:
+
+```bash
+git remote add heroku https://git.heroku.com/attendance-bot-mit.git
+```
+
+Now set up the following alias:
+
+```bash
+git config alias.heroku "subtree push --prefix src/Heroku heroku master"
+```
+
+This way, to push the project to Heroku, all we need to do is run the command `git heroku`.
+
+#### Google Apps Script Development
+
 1. Create a Google Apps Script for the attendance spreadsheet: Tools -> Script editor.
 2. Using the [`clasp` CLI](https://developers.google.com/apps-script/guides/clasp#clone_an_existing_project), clone the project.
-3. Copy the files in the `src` directory into the directory of the cloned project.
-4. Run `clasp push` to push the code.
+3. In the `src/Google/src` directory, run `clasp push` to push the code (add the `--watch` flag to have the `clasp` tool automatically push every time you save a file).
 
 The Slack API key is stored in the Google Apps Script properties. It is also encrypted in this repository with [blackbox](https://github.com/StackExchange/blackbox#blackbox-). The slash commands are specified on the Slack App page, under "Slash Commands".
 
@@ -62,5 +88,6 @@ The Slack API key is stored in the Google Apps Script properties. It is also enc
 
 | Version | Changes                                                          |
 | ------- | ---------------------------------------------------------------- |
+| 1.2.0   | Migrated most logic to Heroku to allow asynchronous logic        |
 | 1.1.0   | Improve handling of offsets with `ColumnLocator` ADT.            |
 | 1.0.0   | Initial release: /in, /out, /h, /announce, and announce message. |
