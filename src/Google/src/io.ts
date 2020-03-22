@@ -73,7 +73,7 @@ function handleInOut(
     updateBefore.setTime(updateBefore.getTime() - TWO_HOURS); // 10pm the day before
     let nextDay = new Date(eventDate);
     nextDay.setTime(nextDay.getTime() + ONE_DAY); // midnight the next day
-    const today = new Date();
+    const today = new Date(Date.now());
     if (!userIn && updateBefore < today) {
       addLateChangeAlert = true;
       console.log("Alerting user about late change");

@@ -118,7 +118,7 @@ class ColumnLocator {
       throw `Assertion failed, ${dateStr} doesn't match format`;
 
     // append year to date to follow rep invariant
-    const currentYear = new Date().getFullYear();
+    const currentYear = new Date(Date.now()).getFullYear();
     dateStr = `${dateStr}/${currentYear}`;
 
     // handle offset

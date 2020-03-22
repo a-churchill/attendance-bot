@@ -3,7 +3,7 @@ import * as Constants from "./constants";
 import * as Types from "./interfaces";
 import { sendResponse } from "./app";
 import { getEventInfo, getEventCount } from "./spreadsheet";
-import { ColumnLocator, getEventDescription } from "./text";
+import { ColumnLocator, getEventDescription, parseAnnounceNote } from "./text";
 import { getUserAvatarUrl } from "./user";
 
 /**
@@ -34,32 +34,10 @@ export async function handleAnnounce(
     >;
     if (!body.ok) {
       // request failed
-      const errorMessage = body.payload as unknown;
-      return sendResponse(
-        Constants.ANNOUNCE_FAILURE_RESPONSE +
-          "(fetching next date) " +
-          errorMessage,
-        responseInfo
-      );
+      throw body.payload;
     }
-    let eventInfo = { note: note, ...body.payload };
-    let date = new ColumnLocator();
-    if (note.charAt(0) === Constants.OFFSET_SPECIFIER_PREFIX) {
-      // specified offset
-      const potentialOffset = note.split(" ")[0];
-      date.initialize(eventInfo.eventDate + potentialOffset);
-      if (!date.isValid()) date.initialize(eventInfo.eventDate);
-      else {
-        // valid offset, remove it from note
-        note = note
-          .split(" ")
-          .slice(1)
-          .join(" ");
-        console.log(`Offset of ${potentialOffset}; remaining note: ${note}`);
-      }
-    } else {
-      date.initialize(eventInfo.eventDate);
-    }
+    const { newNote, date } = parseAnnounceNote(note, body.payload.eventDate);
+    let eventInfo = { note: newNote, ...body.payload };
     eventInfo = { dateForColumnLocator: date.toString(), ...eventInfo };
     sendAnnouncement(eventInfo);
     return sendResponse(
