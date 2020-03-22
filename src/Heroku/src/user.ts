@@ -16,7 +16,12 @@ export async function getUserAvatarUrl(userId: string) {
     userId,
     fetch(requestUrl)
       .then(response => response.json())
-      .then((json: Types.SlackUserRequestInfo) => json.user.profile.image_48) // on miss
+      .then((json: Types.SlackUserRequestInfo) => {
+        return JSON.stringify({
+          im: json.user.profile.image_48,
+          name: json.user.name
+        });
+      })
   );
   return cacheResult;
 }
