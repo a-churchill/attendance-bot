@@ -88,6 +88,6 @@ The Slack API key is stored in the Google Apps Script properties. It is also enc
 
 | Version | Changes                                                          |
 | ------- | ---------------------------------------------------------------- |
-| 1.2.0   | Migrated most logic to Heroku to allow asynchronous logic        |
+| 2.0.0   | Migrated most logic to Heroku to allow asynchronous logic        |
 | 1.1.0   | Improve handling of offsets with `ColumnLocator` ADT.            |
 | 1.0.0   | Initial release: /in, /out, /h, /announce, and announce message. |
