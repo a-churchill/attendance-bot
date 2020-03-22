@@ -66,6 +66,11 @@ export interface PostContent {
   };
 }
 
+export interface UserAvatarInfo {
+  im: string;
+  name: string;
+}
+
 export interface SlackSlashCommandInfo {
   channel_name: string;
   user_id: string;

@@ -106,12 +106,13 @@ function makeAnnouncementBlocks(
     ]
   };
   if (avatarCount > 0 && eventInfo.userAvatars) {
-    eventInfo.userAvatars.forEach((image_url: string) => {
+    eventInfo.userAvatars.forEach((userInfo: string) => {
+      const userAvatarInfo: Types.UserAvatarInfo = JSON.parse(userInfo);
       if (contextBlock.elements) {
         contextBlock.elements.unshift({
           type: "image",
-          image_url,
-          alt_text: "player"
+          image_url: userAvatarInfo.im,
+          alt_text: userAvatarInfo.name
         });
       }
     });
@@ -225,9 +226,7 @@ export async function updateAnnouncement(
     }
   })
     .then(res => res.json())
-    .then(json =>
-      console.log("Announcement update response: " + JSON.stringify(json))
-    );
+    .then(json => console.log("Received announcement update response"));
 }
 
 /**
