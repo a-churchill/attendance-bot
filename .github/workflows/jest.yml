@@ -5,9 +5,9 @@ name: Jest CI
 
 on:
   push:
-    branches: [ master, heroku ]
+    branches: [ heroku ]
   pull_request:
-    branches: [ master ]
+    branches: [ heroku ]
 
 jobs:
   build:
