@@ -17,6 +17,6 @@ test("Test full event description", () => {
 
 test("Test shorter event description", () => {
   expect(getEventDescription(eventInfo, false)).toBe(
-    "Scrimmage vs. BU on 3/2/2020"
+    "Scrimmage vs. BU on 3/2/202"
   );
 });
