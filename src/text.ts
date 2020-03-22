@@ -35,6 +35,30 @@ export function getSlashCommand(command: string): Enums.SlashCommand {
   }
 }
 
+export function parseAnnounceNote(
+  note: string,
+  eventDate: string
+): { newNote: string; date: ColumnLocator } {
+  const date = new ColumnLocator();
+  if (note.charAt(0) === Constants.OFFSET_SPECIFIER_PREFIX) {
+    // specified offset
+    const potentialOffset = note.split(" ")[0];
+    date.initialize(eventDate + potentialOffset);
+    if (!date.isValid()) date.initialize(eventDate);
+    else {
+      // valid offset, remove it from note
+      note = note
+        .split(" ")
+        .slice(1)
+        .join(" ");
+      console.log(`Offset of ${potentialOffset}; remaining note: ${note}`);
+    }
+  } else {
+    date.initialize(eventDate);
+  }
+  return { newNote: note, date };
+}
+
 /**
  * Represents a locator for a column in the spreadsheet. The locator consists of
  * a date (which must exist in the spreadsheet) and an offset (where "" and "#1"
@@ -84,7 +108,7 @@ export class ColumnLocator {
       throw `Assertion failed, ${dateStr} doesn't match format`;
 
     // append year to date to follow rep invariant
-    const currentYear = new Date().getFullYear();
+    const currentYear = new Date(Date.now()).getFullYear();
     dateStr = `${dateStr}/${currentYear}`;
 
     // handle offset
