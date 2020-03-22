@@ -19,7 +19,7 @@ export async function getUserAvatarUrl(userId: string) {
       .then((json: Types.SlackUserRequestInfo) => {
         return JSON.stringify({
           im: json.user.profile.image_48,
-          name: json.user.name
+          name: json.user.real_name
         });
       })
   );
