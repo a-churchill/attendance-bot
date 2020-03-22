@@ -26,6 +26,8 @@ And AttendanceBot gives helpful feedback to the user, giving them usage hints an
 
 AttendanceBot is written entirely in TypeScript, and it is hosted primarily on Heroku, as well as a component on the Google Apps Script service. The platform sends POST requests to the `express` app in the `Heroku` directory, which handles the different possible inputs. To get information or update the spreadsheet, the Heroku app will send requests to the Google Apps Script portion, in the `Google` directory.
 
+![Jest CI](https://github.com/a-churchill/attendance-bot/workflows/Jest%20CI/badge.svg?branch=heroku)
+
 ## Assumptions about External Services
 
 ### Attendance Spreadsheet
@@ -88,6 +90,6 @@ The Slack API key is stored in the Google Apps Script properties. It is also enc
 
 | Version | Changes                                                          |
 | ------- | ---------------------------------------------------------------- |
-| 2.0.0   | Migrated most logic to Heroku to allow asynchronous logic        |
+| 2.0.0   | Migrated most logic to Heroku to allow massive performance boost |
 | 1.1.0   | Improve handling of offsets with `ColumnLocator` ADT.            |
 | 1.0.0   | Initial release: /in, /out, /h, /announce, and announce message. |
