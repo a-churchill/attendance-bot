@@ -27,7 +27,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 app.get("/", (_, res: Response) => {
-  res.status(200).send("This is just a Slack app. Nothing here!");
+  res.status(200).send("This is just a Slack app. Nothing to see here!");
 });
 
 app.post("/slash", (req: Request, res: Response) => {
