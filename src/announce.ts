@@ -42,7 +42,6 @@ export async function handleAnnounce(
         responseInfo
       );
     }
-    console.log(`GAS response: ${JSON.stringify(body, null, 2)}`);
     let eventInfo = { note: note, ...body.payload };
     let date = new ColumnLocator();
     if (note.charAt(0) === Constants.OFFSET_SPECIFIER_PREFIX) {
