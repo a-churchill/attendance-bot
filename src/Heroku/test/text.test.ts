@@ -6,7 +6,7 @@ const eventInfo: Types.EventInfo = {
   eventLocation: "Roberts",
   eventTime: "1-3",
   eventType: "Scrimmage vs. BU",
-  count: 2
+  count: 3
 };
 
 test("Test full event description", () => {
