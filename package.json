@@ -20,7 +20,8 @@
     "typescript": "^3.8.3"
   },
   "scripts": {
-    "test": "jest --watch",
+    "test": "jest",
+    "test-watch": "jest --watch",
     "build-ts": "tsc --outDir dist",
     "postinstall": "npm run build-ts",
     "start": "npm run serve",
