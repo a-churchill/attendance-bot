@@ -9,7 +9,7 @@ export const API_TOKEN = TESTING
 
 // Google Apps Script interface
 export const GOOGLE_URL = TESTING
-  ? "https://script.google.com/macros/s/AKfycbzQAWGCo5H1bczQM-U9AcUDciIhAsnCml6DynT1dHlh/dev"
+  ? "https://script.google.com/macros/s/AKfycbw0gPC7kKdIDsF2IkiJwbTXxacbAbkdxmlUG_6Fbu8qKjwD3EEL/exec"
   : "https://script.google.com/macros/s/AKfycbw0gPC7kKdIDsF2IkiJwbTXxacbAbkdxmlUG_6Fbu8qKjwD3EEL/exec";
 export const GOOGLE_EVENT_INFO_NAME = "event-info";
 export const GOOGLE_EVENT_COUNT_NAME = "event-count";
