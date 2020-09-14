@@ -22,7 +22,7 @@ function getUserRow(
     const usernamesDeep = sheet
       .getRange(1, USERNAME_COL, lastRow, 1)
       .getValues();
-    usernames = usernamesDeep.map(x => x[0]);
+    usernames = usernamesDeep.map((x) => x[0]);
     const cache = cacheResult.result as GoogleAppsScript.Cache.Cache;
     cache.put(
       USERNAME_COL_CACHE_KEY,
@@ -50,6 +50,7 @@ function getDateCol(
 ): number {
   if (!date.isValid()) {
     // just select next practice
+    console.log("Selecting next practice");
     try {
       return getNextPracticeDate(sheet) as number;
     } catch (err) {
@@ -141,7 +142,7 @@ function getEventInfoFromCol(
     col,
     LAST_INFO_ROW - FIRST_INFO_ROW + 1
   );
-  const displayValues = infoRange.getDisplayValues().map(x => x[0]); // flatten
+  const displayValues = infoRange.getDisplayValues().map((x) => x[0]); // flatten
   const eventType = displayValues[DESCRIPTION_ROW - FIRST_INFO_ROW];
   const eventDate = displayValues[DATE_ROW - FIRST_INFO_ROW];
   const eventTime = displayValues[TIME_ROW - FIRST_INFO_ROW];
@@ -153,7 +154,7 @@ function getEventInfoFromCol(
     eventTime,
     eventLocation,
     count,
-    includeTimeLoc: infoRange.getBackground() === WHITE_COLOR
+    includeTimeLoc: infoRange.getBackground() === WHITE_COLOR,
   };
   const cache = cacheResult.result as GoogleAppsScript.Cache.Cache;
   cache.put(cacheKey, JSON.stringify(eventInfo), CACHE_DURATION_SHORT);
