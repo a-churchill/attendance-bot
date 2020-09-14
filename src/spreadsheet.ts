@@ -1,9 +1,10 @@
-import fetch from "node-fetch";
-import * as Constants from "./constants";
-import * as Enums from "./enums";
-import * as Types from "./interfaces";
-import { ColumnLocator } from "./text";
-import { tryGetCache } from "./cache";
+import fetch from 'node-fetch';
+
+import { tryGetCache } from './cache';
+import * as Constants from './constants';
+import * as Enums from './enums';
+import * as Types from './interfaces';
+import { ColumnLocator } from './text';
 
 /**
  * Gets the event info from the spreadsheet (all required fields) wrapped in GoogleResponse
@@ -19,6 +20,7 @@ export async function getEventInfo(date: ColumnLocator | null) {
     );
   } else {
     // no date given, get next date
+    console.log("Skipping cache, fetching info for next date");
     return await sendGetRequest(Constants.GOOGLE_EVENT_INFO_NAME, "");
   }
 }
@@ -45,8 +47,8 @@ export async function setUserStatus(userStatus: Types.UserStatus) {
   return await fetch(Constants.GOOGLE_URL, {
     method: "POST",
     body: JSON.stringify(userStatus),
-    headers: Constants.JSON_CONTENT_HEADERS
-  }).then(res => res.text());
+    headers: Constants.JSON_CONTENT_HEADERS,
+  }).then((res) => res.text());
 }
 
 /**
@@ -58,7 +60,7 @@ async function sendGetRequest(method: string, value: string) {
   const response = await fetch(
     Constants.GOOGLE_URL + queryStringify({ method, value }),
     {
-      method: "GET"
+      method: "GET",
     }
   );
   console.log(`Got response to ${method} call`);
