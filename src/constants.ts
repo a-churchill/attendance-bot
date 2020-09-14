@@ -1,16 +1,14 @@
 // if true, uses testing workspace and sheet; if false, uses production workspace and sheet
 export const TESTING = process.env.TESTING === "true";
 // app configuration
-export const CURRENT_SHEET = TESTING ? "(testing)" : "Fall";
 export const ANNOUNCE_CHANNEL_ID = TESTING ? "CT2197CMP" : "C03D3MVC6"; // testing-attendancebot in MIT-ultimate: CST5V9275; announce: C03D3MVC6
 export const API_TOKEN = TESTING
   ? (process.env.API_TOKEN_TESTING as string)
   : (process.env.API_TOKEN as string);
 
 // Google Apps Script interface
-export const GOOGLE_URL = TESTING
-  ? "https://script.google.com/macros/s/AKfycbw0gPC7kKdIDsF2IkiJwbTXxacbAbkdxmlUG_6Fbu8qKjwD3EEL/exec"
-  : "https://script.google.com/macros/s/AKfycbw0gPC7kKdIDsF2IkiJwbTXxacbAbkdxmlUG_6Fbu8qKjwD3EEL/exec";
+export const GOOGLE_URL =
+  "https://script.google.com/macros/s/AKfycbw0gPC7kKdIDsF2IkiJwbTXxacbAbkdxmlUG_6Fbu8qKjwD3EEL/exec";
 export const GOOGLE_EVENT_INFO_NAME = "event-info";
 export const GOOGLE_EVENT_COUNT_NAME = "event-count";
 
