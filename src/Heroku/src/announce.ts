@@ -1,10 +1,11 @@
-import fetch from "node-fetch";
-import * as Constants from "./constants";
-import * as Types from "./interfaces";
-import { sendResponse } from "./app";
-import { getEventInfo, getEventCount } from "./spreadsheet";
-import { ColumnLocator, getEventDescription, parseAnnounceNote } from "./text";
-import { getUserAvatarUrl } from "./user";
+import fetch from 'node-fetch';
+
+import { sendResponse } from './app';
+import * as Constants from './constants';
+import * as Types from './interfaces';
+import { getEventCount, getEventInfo } from './spreadsheet';
+import { ColumnLocator, getEventDescription, parseAnnounceNote } from './text';
+import { getUserAvatarUrl } from './user';
 
 /**
  * Handles an event announcement request, coming from a "/announce" command. Returns the
@@ -29,6 +30,8 @@ export async function handleAnnounce(
     if (note === "help")
       return sendResponse(Constants.ANNOUNCE_HELP_TEXT, responseInfo);
     const eventInfoStr = await getEventInfo(null);
+    console.log("Event info string:");
+    console.log(eventInfoStr);
     const body = JSON.parse(eventInfoStr) as Types.GoogleResponse<
       Types.EventInfo
     >;
@@ -78,9 +81,9 @@ function makeAnnouncementBlocks(
         text:
           avatarCount > 0
             ? `+ ${eventInfo.count - avatarCount} more already in`
-            : `${eventInfo.count} already in`
-      }
-    ]
+            : `${eventInfo.count} already in`,
+      },
+    ],
   };
   if (avatarCount > 0 && eventInfo.userAvatars) {
     eventInfo.userAvatars.forEach((userInfo: string) => {
@@ -89,7 +92,7 @@ function makeAnnouncementBlocks(
         contextBlock.elements.unshift({
           type: "image",
           image_url: userAvatarInfo.im,
-          alt_text: userAvatarInfo.name
+          alt_text: userAvatarInfo.name,
         });
       }
     });
@@ -99,8 +102,8 @@ function makeAnnouncementBlocks(
       type: "section",
       text: {
         type: "mrkdwn",
-        text: Constants.ANNOUNCE_HEADER_TEXT
-      }
+        text: Constants.ANNOUNCE_HEADER_TEXT,
+      },
     },
     {
       type: "section",
@@ -115,13 +118,13 @@ function makeAnnouncementBlocks(
           eventInfo.eventTime +
           "\n*Where:* " +
           eventInfo.eventLocation +
-          (eventInfo.note ? "\n*Note:* " + eventInfo.note : "")
+          (eventInfo.note ? "\n*Note:* " + eventInfo.note : ""),
       },
       accessory: {
         type: "image",
         image_url: Constants.ANNOUNCE_PICTURE_URL,
-        alt_text: "frisbee"
-      }
+        alt_text: "frisbee",
+      },
     },
     contextBlock,
     {
@@ -133,10 +136,10 @@ function makeAnnouncementBlocks(
           text: {
             type: "plain_text",
             emoji: true,
-            text: "In"
+            text: "In",
           },
           style: "primary",
-          value: JSON.stringify(eventInfo)
+          value: JSON.stringify(eventInfo),
         },
         {
           type: "button",
@@ -144,13 +147,13 @@ function makeAnnouncementBlocks(
           text: {
             type: "plain_text",
             emoji: true,
-            text: "Out"
+            text: "Out",
           },
           style: "danger",
-          value: JSON.stringify(eventInfo)
-        }
-      ]
-    }
+          value: JSON.stringify(eventInfo),
+        },
+      ],
+    },
   ];
 }
 
@@ -192,18 +195,18 @@ export async function updateAnnouncement(
     channel: Constants.ANNOUNCE_CHANNEL_ID,
     text: Constants.ANNOUNCE_HEADER_TEXT,
     blocks: makeAnnouncementBlocks(eventInfo),
-    ts: updateInfo.messageTimestamp
+    ts: updateInfo.messageTimestamp,
   };
   fetch(Constants.SLACK_UPDATE_MESSAGE_URL, {
     method: "POST",
     body: JSON.stringify(payload),
     headers: {
       Authorization: Constants.API_TOKEN,
-      ...Constants.JSON_CONTENT_HEADERS
-    }
+      ...Constants.JSON_CONTENT_HEADERS,
+    },
   })
-    .then(res => res.json())
-    .then(json => console.log("Received announcement update response"));
+    .then((res) => res.json())
+    .then((json) => console.log("Received announcement update response"));
 }
 
 /**
@@ -214,7 +217,7 @@ function sendAnnouncement(originalEventInfo: Types.EventInfo): void {
   // collect event data
   let eventInfo: Types.EventInfo = {
     ...originalEventInfo,
-    userAvatars: []
+    userAvatars: [],
   };
   // strip year from event date
   eventInfo.eventDate = eventInfo.eventDate.substring(
@@ -225,16 +228,16 @@ function sendAnnouncement(originalEventInfo: Types.EventInfo): void {
   let payload: Types.SlackMessageSendInfo = {
     channel: Constants.ANNOUNCE_CHANNEL_ID,
     text: Constants.ANNOUNCE_HEADER_TEXT + " " + eventInfo.note,
-    blocks
+    blocks,
   };
   fetch(Constants.SLACK_SEND_MESSAGE_URL, {
     method: "POST",
     body: JSON.stringify(payload),
     headers: {
       Authorization: Constants.API_TOKEN,
-      ...Constants.JSON_CONTENT_HEADERS
-    }
+      ...Constants.JSON_CONTENT_HEADERS,
+    },
   })
-    .then(res => res.json())
-    .then(json => console.log("Announcement post response received"));
+    .then((res) => res.json())
+    .then((json) => console.log("Announcement post response received"));
 }
