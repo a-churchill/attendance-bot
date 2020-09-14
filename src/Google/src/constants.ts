@@ -1,7 +1,7 @@
 // if true, uses testing workspace and sheet; if false, uses production workspace and sheet
 const TESTING = false;
 // app configuration
-const CURRENT_SHEET = TESTING ? "Spring (testing)" : "Spring";
+const CURRENT_SHEET = TESTING ? "Fall" : "(testing)";
 const GOOGLE_EVENT_INFO_NAME = "event-info";
 const GOOGLE_EVENT_COUNT_NAME = "event-count";
 const MAX_EVENT_SEARCH_DISTANCE = 7;

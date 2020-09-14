@@ -50,11 +50,11 @@ function getDateCol(
 ): number {
   if (!date.isValid()) {
     // just select next practice
-    console.log("Selecting next practice");
     try {
       return getNextPracticeDate(sheet) as number;
     } catch (err) {
       // no practice in next 7 days
+      console.log(err);
       throw err;
     }
   }
