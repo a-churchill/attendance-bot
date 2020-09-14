@@ -1,6 +1,6 @@
 /**
  * Tries to fetch the given key from the cache. Returns cache if lookup failed.
- * @param key key to look up in cache
+ * @param key key to look up in cache.
  */
 function tryFetchCache(
   key: string
