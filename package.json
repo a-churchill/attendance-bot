@@ -34,7 +34,7 @@
     "type": "git"
   },
   "engines": {
-    "node": "12.14.x"
+    "node": "12.x"
   },
   "author": "Andrew Churchill",
   "license": "ISC"

@@ -1,7 +1,7 @@
 // if true, uses testing workspace and sheet; if false, uses production workspace and sheet
 export const TESTING = process.env.TESTING === "true";
 // app configuration
-export const CURRENT_SHEET = TESTING ? "Spring (testing)" : "Spring";
+export const CURRENT_SHEET = TESTING ? "(testing)" : "Fall";
 export const ANNOUNCE_CHANNEL_ID = TESTING ? "CT2197CMP" : "C03D3MVC6"; // testing-attendancebot in MIT-ultimate: CST5V9275; announce: C03D3MVC6
 export const API_TOKEN = TESTING
   ? (process.env.API_TOKEN_TESTING as string)
