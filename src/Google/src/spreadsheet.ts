@@ -19,16 +19,10 @@ function getUserRow(
   } else {
     // cache miss
     const lastRow = sheet.getLastRow();
-    const usernamesDeep = sheet
-      .getRange(1, USERNAME_COL, lastRow, 1)
-      .getValues();
+    const usernamesDeep = sheet.getRange(1, USERNAME_COL, lastRow, 1).getValues();
     usernames = usernamesDeep.map((x) => x[0]);
     const cache = cacheResult.result as GoogleAppsScript.Cache.Cache;
-    cache.put(
-      USERNAME_COL_CACHE_KEY,
-      JSON.stringify(usernames),
-      CACHE_DURATION
-    );
+    cache.put(USERNAME_COL_CACHE_KEY, JSON.stringify(usernames), CACHE_DURATION);
   }
   let row = usernames.indexOf(username, HEADER_ROWS);
   if (row === -1) {
@@ -50,6 +44,7 @@ function getDateCol(
 ): number {
   if (!date.isValid()) {
     // just select next practice
+    console.log("getDateCol for next practice");
     try {
       return getNextPracticeDate(sheet) as number;
     } catch (err) {
@@ -61,6 +56,7 @@ function getDateCol(
 
   let dates = getDateRowValues(sheet);
   let col = dates.indexOf(date.getDate(), HEADER_COLS);
+  console.log(`Found date in column ${col}`);
   if (col === -1) {
     // invalid date, get nice information for error message
     let nextPrac: string;
@@ -79,9 +75,7 @@ function getDateCol(
  * CACHE_DURATION after first fetch.
  * @param sheet current sheet
  */
-function getDateRowValues(
-  sheet: GoogleAppsScript.Spreadsheet.Sheet
-): Array<string> {
+function getDateRowValues(sheet: GoogleAppsScript.Spreadsheet.Sheet): Array<string> {
   const cacheResult = tryFetchCache(DATE_ROW_CACHE_KEY);
   if (cacheResult.hit) {
     const result = cacheResult.result as string;

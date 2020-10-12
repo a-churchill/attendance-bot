@@ -15,8 +15,7 @@ export const GOOGLE_EVENT_COUNT_NAME = "event-count";
 // Slack URLs
 export const SLACK_SEND_MESSAGE_URL = "https://slack.com/api/chat.postMessage";
 export const SLACK_OPEN_MODAL_URL = "https://slack.com/api/views.open";
-export const SLACK_SEND_EPHEMERAL_URL =
-  "https://slack.com/api/chat.postEphemeral";
+export const SLACK_SEND_EPHEMERAL_URL = "https://slack.com/api/chat.postEphemeral";
 export const SLACK_USER_INFO_URL = "https://slack.com/api/users.info";
 export const SLACK_UPDATE_MESSAGE_URL = "https://slack.com/api/chat.update";
 export const MAX_EVENT_SEARCH_DISTANCE = 7;
@@ -44,10 +43,8 @@ export const USERNAME_COL_CACHE_KEY = TESTING ? "user_col_testing" : "user_col";
 // user response variables
 export const SUCCESS_RESPONSE = ":heavy_check_mark: Updated spreadsheet. ";
 export const NO_CHANGE_RESPONSE = ":thumbsup_all: No change necessary. ";
-export const FAILURE_RESPONSE =
-  ":scrub_arjun: Couldn't update the spreadsheet: ";
-export const NO_REASON_ERROR =
-  "please add a reason for why you're missing practice.";
+export const FAILURE_RESPONSE = ":scrub_arjun: Couldn't update the spreadsheet: ";
+export const NO_REASON_ERROR = "please add a reason for why you're missing practice.";
 export const DATE_HELP_INFO =
   "\n:information_source: If you just want to choose the next upcoming practice, no need to specify the date";
 export const LATE_CHANGE_ALERT =
@@ -56,10 +53,8 @@ export const PAST_CHANGE_ALERT =
   "\n:exclamation: The date you just updated is in the past.";
 export const BLACKED_OUT_ALERT =
   "\n:information_source: Your cell was blacked out. You may want to check the spreadsheet.";
-export const ANNOUNCE_SUCCESS_RESPONSE =
-  ":heavy_check_mark: Sent announcement for ";
-export const ANNOUNCE_FAILURE_RESPONSE =
-  ":scrub_arjun: Couldn't send announcement: ";
+export const ANNOUNCE_SUCCESS_RESPONSE = ":heavy_check_mark: Sent announcement for ";
+export const ANNOUNCE_FAILURE_RESPONSE = ":scrub_arjun: Couldn't send announcement: ";
 export const ANNOUNCE_HEADER_TEXT =
   "<!channel|channel> Reply here to update the attendance spreadsheet.";
 export const HELP_TEXT = `Thanks for using AttendanceBot!\n\n:information_source: Just so you know, all you ever need to do is type */in* (in any channel) to automatically put a yes in the spreadsheet for the next practice. But for more details, here are the available commands:\n\n:one: */in* [date] [note]: marks you as a yes on the spreadsheet for the given date. If you don't specify a date, the default will be the next practice. The note is optional.\n\n:two: */out* [date] [reason]: marks you as a no on the spreadsheet for the given date. If you don't specify a date, the default will be the next practice. The reason is _mandatory_.\n\n:three: */help*: the command you just used!\n\n_Note: there is also an */announce* command, but it is only accessible to captains :wink:_\n\nTo submit an issue, <${GITHUB_ISSUE_URL}|go here>.`;
