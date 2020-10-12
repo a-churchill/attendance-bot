@@ -33,10 +33,7 @@ export async function getEventCount(date: ColumnLocator) {
   if (!date.isValid()) {
     throw "Trying to fetch event count for invalid date";
   }
-  return await sendGetRequest(
-    Constants.GOOGLE_EVENT_COUNT_NAME,
-    date.toString()
-  );
+  return await sendGetRequest(Constants.GOOGLE_EVENT_COUNT_NAME, date.toString());
 }
 
 /**
@@ -57,12 +54,11 @@ export async function setUserStatus(userStatus: Types.UserStatus) {
  * @param value value for Google Apps Script API
  */
 async function sendGetRequest(method: string, value: string) {
-  const response = await fetch(
-    Constants.GOOGLE_URL + queryStringify({ method, value }),
-    {
-      method: "GET",
-    }
-  );
+  const url = Constants.GOOGLE_URL + queryStringify({ method, value });
+  console.log("Sending request to " + url);
+  const response = await fetch(url, {
+    method: "GET",
+  });
   console.log(`Got response to ${method} call`);
   return response.text();
 }
