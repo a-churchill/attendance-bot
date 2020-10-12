@@ -29,17 +29,26 @@ export async function handleAnnounce(
     let note = context.text;
     if (note === "help")
       return sendResponse(Constants.ANNOUNCE_HELP_TEXT, responseInfo);
+
+    // gets event info for next event
     const eventInfoStr = await getEventInfo(null);
-    console.log("Event info string:");
+    console.log("Next event info string:");
     console.log(eventInfoStr);
-    const body = JSON.parse(eventInfoStr) as Types.GoogleResponse<
-      Types.EventInfo
-    >;
+    let body = JSON.parse(eventInfoStr) as Types.GoogleResponse<Types.EventInfo>;
     if (!body.ok) {
       // request failed
       throw body.payload;
     }
+
+    // parse announce text, fetch new event info if necessary
     const { newNote, date } = parseAnnounceNote(note, body.payload.eventDate);
+    if (newNote !== note) {
+      // parsed offset in note, fetch new event info
+      const newEventInfoStr = await getEventInfo(date);
+      console.log("Selected event info string:");
+      console.log(newEventInfoStr);
+      body = JSON.parse(newEventInfoStr) as Types.GoogleResponse<Types.EventInfo>;
+    }
     let eventInfo = { note: newNote, ...body.payload };
     eventInfo = { dateForColumnLocator: date.toString(), ...eventInfo };
     sendAnnouncement(eventInfo);
@@ -67,9 +76,7 @@ export async function handleAnnounce(
  * stringified version of the eventInfo.
  * @param eventInfo info about event, should contain eventType, eventDate (no year), eventTime, eventLocation at least.
  */
-function makeAnnouncementBlocks(
-  eventInfo: Types.EventInfo
-): Array<Types.SlackBlock> {
+function makeAnnouncementBlocks(eventInfo: Types.EventInfo): Array<Types.SlackBlock> {
   // make context block
   let avatarCount = (eventInfo.userAvatars || []).length;
   let contextBlock: Types.SlackBlock = {
@@ -163,9 +170,7 @@ function makeAnnouncementBlocks(
  * @param updateInfo information necessary to update announcement
  * @param sheet current sheet, for fetching updated event count
  */
-export async function updateAnnouncement(
-  updateInfo: Types.AnnouncementUpdateInfo
-) {
+export async function updateAnnouncement(updateInfo: Types.AnnouncementUpdateInfo) {
   if (typeof updateInfo === "undefined") return;
   let eventInfo = updateInfo.eventInfo;
   // get user info, set up avatars array
@@ -210,8 +215,9 @@ export async function updateAnnouncement(
 }
 
 /**
- * Sends an announcement of the event in the specified column to the announce channel.
- * @param originalEventInfo must have note, count, dateForColumnLocator
+ * Sends an announcement of the event to the announce channel. Does not check the
+ * spreadsheet, just sends an announcement with the given event info.
+ * @param originalEventInfo must requirements from makeAnnouncementBlocks
  */
 function sendAnnouncement(originalEventInfo: Types.EventInfo): void {
   // collect event data
