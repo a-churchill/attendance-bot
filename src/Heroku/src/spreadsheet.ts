@@ -15,7 +15,10 @@ export async function getEventInfo(date: ColumnLocator | null) {
   if (date) {
     return await tryGetCache(
       date.toString(),
-      sendGetRequest(Constants.GOOGLE_EVENT_INFO_NAME, date.toString()), // to call on miss
+      sendGetRequest(
+        Constants.GOOGLE_EVENT_INFO_NAME,
+        date.toString().replace(Constants.OFFSET_SPECIFIER_PREFIX, "@")
+      ), // to call on miss
       Constants.CACHE_DURATION_SHORT
     );
   } else {
