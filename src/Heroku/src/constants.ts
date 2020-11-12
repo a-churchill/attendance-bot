@@ -29,6 +29,7 @@ export const REASON_ACTION_ID = "reason_action";
 export const GITHUB_ISSUE_URL =
   "https://github.com/a-churchill/attendance-bot/issues/new";
 export const OFFSET_SPECIFIER_PREFIX = "#";
+export const URL_SAFE_OFFSET_SPECIFIER_PREFIX = "@";
 
 // cache configuration
 export const REDIS_CACHE_EXPIRATION_KEY = "EX";

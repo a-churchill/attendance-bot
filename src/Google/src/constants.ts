@@ -6,6 +6,7 @@ const GOOGLE_EVENT_INFO_NAME = "event-info";
 const GOOGLE_EVENT_COUNT_NAME = "event-count";
 const MAX_EVENT_SEARCH_DISTANCE = 7;
 const OFFSET_SPECIFIER_PREFIX = "#";
+const URL_SAFE_OFFSET_SPECIFIER_PREFIX = "@";
 
 // cache configuration
 const CACHE_DURATION = 21600; // 6 hours

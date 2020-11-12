@@ -24,7 +24,7 @@ function doGet(e: GetContent): GoogleAppsScript.Content.TextOutput {
   try {
     if (e.parameter.method === GOOGLE_EVENT_COUNT_NAME) {
       console.log("Getting event count");
-      const date = e.parameter.value as string;
+      const date = (e.parameter.value as string).replace(URL_SAFE_OFFSET_SPECIFIER_PREFIX, OFFSET_SPECIFIER_PREFIX);
       const dateObj = new ColumnLocator();
       const result = dateObj.initialize(date);
       const invalidDateErrorResult = JSON.stringify({
@@ -48,7 +48,7 @@ function doGet(e: GetContent): GoogleAppsScript.Content.TextOutput {
       );
     } else if (e.parameter.method === GOOGLE_EVENT_INFO_NAME) {
       console.log("Getting event info for " + JSON.stringify(e.parameter));
-      const date = (e.parameter.value as string).replace("@", OFFSET_SPECIFIER_PREFIX);
+      const date = (e.parameter.value as string).replace(URL_SAFE_OFFSET_SPECIFIER_PREFIX, OFFSET_SPECIFIER_PREFIX);
       const dateObj = new ColumnLocator();
       dateObj.initialize(date);
       if (!dateObj.isValid() && date.length > 0) throw "invalid date string " + date;
