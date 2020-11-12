@@ -17,7 +17,7 @@ export async function getEventInfo(date: ColumnLocator | null) {
       date.toString(),
       sendGetRequest(
         Constants.GOOGLE_EVENT_INFO_NAME,
-        date.toString().replace(Constants.OFFSET_SPECIFIER_PREFIX, "@")
+        date.toString().replace(Constants.OFFSET_SPECIFIER_PREFIX, Constants.URL_SAFE_OFFSET_SPECIFIER_PREFIX)
       ), // to call on miss
       Constants.CACHE_DURATION_SHORT
     );
@@ -36,7 +36,7 @@ export async function getEventCount(date: ColumnLocator) {
   if (!date.isValid()) {
     throw "Trying to fetch event count for invalid date";
   }
-  return await sendGetRequest(Constants.GOOGLE_EVENT_COUNT_NAME, date.toString());
+  return await sendGetRequest(Constants.GOOGLE_EVENT_COUNT_NAME, date.toString().replace(Constants.OFFSET_SPECIFIER_PREFIX, Constants.URL_SAFE_OFFSET_SPECIFIER_PREFIX));
 }
 
 /**
