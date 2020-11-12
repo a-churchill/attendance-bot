@@ -171,6 +171,8 @@ function makeAnnouncementBlocks(eventInfo: Types.EventInfo): Array<Types.SlackBl
  * @param sheet current sheet, for fetching updated event count
  */
 export async function updateAnnouncement(updateInfo: Types.AnnouncementUpdateInfo) {
+  console.log("Updating announcement")
+  console.log(JSON.stringify(updateInfo))
   if (typeof updateInfo === "undefined") return;
   let eventInfo = updateInfo.eventInfo;
   // get user info, set up avatars array
