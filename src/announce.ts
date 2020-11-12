@@ -195,6 +195,7 @@ export async function updateAnnouncement(updateInfo: Types.AnnouncementUpdateInf
   const date = new ColumnLocator();
   date.initialize(eventInfo.dateForColumnLocator || "");
   // expensive but worth it to allow up-to-date announcement message
+  console.log("Getting event-count for " + date.toString());
   const countStr = await getEventCount(date);
   const count = JSON.parse(countStr).payload as number;
   eventInfo.count = count;
