@@ -59,19 +59,17 @@ Contributions and suggestions are welcome! Feel free to [submit an issue](https:
 
 #### Heroku Development
 
-Deploying an app on Heroku is as simple as pushing git references. But because we have the Heroku project in a subfolder of this overall git project, we need to use the git `subtree` feature. First we need to make sure the Heroku remote is set up, like so:
+AttendanceBot has a simple deploy pipeline set up on Heroku:
 
-```bash
-git remote add heroku https://git.heroku.com/attendance-bot-mit.git
+![heroku pipeline](https://github.com/xxaxdxcxx/attendance-bot/raw/master/imgs/heroku-pipeline.jpg "Heroku Pipeline")
+
+The pipeline is set up to automatically deploy anything pushed to the `heroku` branch of this repository. However, the `heroku` branch only contains the code in the `src/Heroku` directory; we can't deploy the entire repository to Heroku, because Heroku can't figure out what it actually needs to deploy. So to push only that code, we use git's `subtree` feature. To make life easier, set up the following (project-localized) alias:
+
+```shell
+git config alias.heroku "subtree push --prefix src/Heroku origin heroku"
 ```
 
-Now set up the following alias:
-
-```bash
-git config alias.heroku "subtree push --prefix src/Heroku heroku master"
-```
-
-This way, to push the project to Heroku, all we need to do is run the command `git heroku`.
+This way, to push the project to Heroku, all we need to do is run the command `git heroku`. Then once CI passes, it will be deployed in staging!
 
 #### Google Apps Script Development
 

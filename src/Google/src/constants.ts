@@ -1,7 +1,7 @@
 // if true, uses testing workspace and sheet; if false, uses production workspace and sheet
 const TESTING = false;
 // app configuration
-const CURRENT_SHEET = TESTING ? "(testing)" : "Fall";
+const CURRENT_SHEET = TESTING ? "(testing)" : "Spring";
 const GOOGLE_EVENT_INFO_NAME = "event-info";
 const GOOGLE_EVENT_COUNT_NAME = "event-count";
 const MAX_EVENT_SEARCH_DISTANCE = 7;
@@ -26,8 +26,7 @@ const DATE_HELP_INFO =
   "\n:information_source: If you just want to choose the next upcoming practice, no need to specify the date";
 const LATE_CHANGE_ALERT =
   "\n:exclamation: If you're changing to a no this close to practice, please send a note to your team explaining.";
-const PAST_CHANGE_ALERT =
-  "\n:exclamation: The date you just updated is in the past.";
+const PAST_CHANGE_ALERT = "\n:exclamation: The date you just updated is in the past.";
 const BLACKED_OUT_ALERT =
   "\n:information_source: Your cell was blacked out. You may want to check the spreadsheet.";
 
