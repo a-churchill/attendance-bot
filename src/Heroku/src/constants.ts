@@ -21,7 +21,7 @@ export const SLACK_UPDATE_MESSAGE_URL = "https://slack.com/api/chat.update";
 export const MAX_EVENT_SEARCH_DISTANCE = 7;
 export const AUTHORIZED_ANNOUNCERS = TESTING
   ? ["chu.andrew.8", "chu.andrew.8202"]
-  : ["adchurch", "nicarons", "vdey123318"];
+  : ["adchurch", "ezgordon", "lgovedic", "mlandis"];
 export const ANNOUNCE_PICTURE_URL =
   "https://zn9zxq.bn.files.1drv.com/y4mV6VyeBzHtQSym10dE0dMd91KLlMO1EGLPoiiZaB1eBhpmuXzpRGBqqqetJLrQiH1kt48qRc-RbqivZAfsy65YdUfURsYtRc5L2WvDRhaBqhI-Y1v2u7c0Y7G11dwcex5ClfV_dEBvdOrWUlsFvGLypYs1uhi9hv_DoQp2U8ingapZOtOxAeRWbjkin9YfUE9qS80rsbo88CpwArOyVULjA?width=1000&height=1000&cropmode=none";
 export const REASON_BLOCK_ID = "reason_block";
