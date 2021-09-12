@@ -77,6 +77,9 @@ function handleSlashCommandPost(body: Types.SlackSlashCommandInfo): void {
   } else if (context.command === Enums.SlashCommand.help) {
     sendResponse(Constants.HELP_TEXT, responseInfo);
   } else if (context.command === Enums.SlashCommand.clearCache) {
+    clearCache()
+      .then(() => sendResponse("Cleared cache", responseInfo))
+      .catch((e) => `Failed to clear cache: ${e.message || e}`);
   } else {
     sendResponse(Constants.FAILURE_RESPONSE + "unsupported command", responseInfo);
   }
