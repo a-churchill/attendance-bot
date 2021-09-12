@@ -1,9 +1,8 @@
-import * as Constants from "./constants";
 import * as Enums from "./enums";
 import * as Types from "./interfaces";
 import { ColumnLocator } from "./text";
 import { sendResponse } from "./app";
-import { setUserStatus, getEventInfo } from "./spreadsheet";
+import { setUserStatus } from "./spreadsheet";
 
 /**
  * Given some user interaction making a change to their attendance status (could
@@ -22,11 +21,7 @@ export async function handleInOut(
   // collect data from slash command
   let username = context.username;
   let dateStr = context.text.split(" ")[0]; // if first word is not date, handled below
-  let reason =
-    context.text
-      .split(" ")
-      .slice(1)
-      .join(" ") || ""; // every word but first, or empty if 0/1 words
+  let reason = context.text.split(" ").slice(1).join(" ") || ""; // every word but first, or empty if 0/1 words
   let userIn = context.command === Enums.SlashCommand.in;
 
   console.log(`User ${username}: ${context.command} ${dateStr} ${reason}`);
@@ -45,8 +40,8 @@ export async function handleInOut(
     user: username,
     date: date ? date.toString() : "",
     userIn,
-    comment: reason
-  }).then(value => {
+    comment: reason,
+  }).then((value) => {
     afterSuccessfulChange();
     sendResponse(value, responseInfo);
     return value;

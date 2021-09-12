@@ -15,11 +15,11 @@ export async function getUserAvatarUrl(userId: string) {
   let cacheResult = await tryGetCache(
     userId,
     fetch(requestUrl)
-      .then(response => response.json())
+      .then((response) => response.json())
       .then((json: Types.SlackUserRequestInfo) => {
         return JSON.stringify({
           im: json.user.profile.image_48,
-          name: json.user.real_name
+          name: json.user.real_name,
         });
       })
   );

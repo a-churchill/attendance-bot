@@ -2,6 +2,7 @@
 const TESTING = false;
 // app configuration
 const CURRENT_SHEET = TESTING ? "(testing)" : "Fall 2021";
+const GOOGLE_CLEAR_CACHE_NAME = "clear-cache";
 const GOOGLE_EVENT_INFO_NAME = "event-info";
 const GOOGLE_EVENT_COUNT_NAME = "event-count";
 const MAX_EVENT_SEARCH_DISTANCE = 7;

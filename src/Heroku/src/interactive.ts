@@ -4,7 +4,6 @@ import * as Types from "./interfaces";
 import { handleInOut } from "./io";
 import { ColumnLocator } from "./text";
 import { updateAnnouncement } from "./announce";
-import { getEventInfo } from "./spreadsheet";
 import fetch from "node-fetch";
 
 export function handleBlockAction(json: Types.SlackMessagePayload): void {
@@ -12,7 +11,7 @@ export function handleBlockAction(json: Types.SlackMessagePayload): void {
     eventInfo: JSON.parse(json.actions[0].value),
     userId: json.user.id,
     messageTimestamp: json.container?.message_ts || "", // should never be empty
-    addUser: true
+    addUser: true,
   };
   // clicked button in message
   // simulate slash command request
@@ -23,13 +22,13 @@ export function handleBlockAction(json: Types.SlackMessagePayload): void {
     const context: Types.ResponseContext = {
       username: json.user.username,
       text: updateInfo.eventInfo.dateForColumnLocator || "", // date
-      command: Enums.SlashCommand.in
+      command: Enums.SlashCommand.in,
     };
     const responseInfo: Types.ResponseCustomization = {
       toUrl: json.response_url || "",
-      userId: ""
+      userId: "",
     };
-    handleInOut(context, responseInfo, function() {
+    handleInOut(context, responseInfo, function () {
       updateAnnouncement(updateInfo);
     }).then(() => {
       console.log("Handled in/out from message button click");
@@ -49,22 +48,21 @@ export function handleViewSubmission(json: Types.SlackMessagePayload): void {
   console.log("User submitted modal response");
   // create out response
   let response: string =
-    json.view?.state?.values[Constants.REASON_BLOCK_ID][
-      Constants.REASON_ACTION_ID
-    ].value;
+    json.view?.state?.values[Constants.REASON_BLOCK_ID][Constants.REASON_ACTION_ID]
+      .value;
   const updateInfo = JSON.parse(
     json.view?.private_metadata || ""
   ) as Types.AnnouncementUpdateInfo;
   const context: Types.ResponseContext = {
     username: json.user.username,
     text: `${updateInfo.eventInfo.dateForColumnLocator} ${response}`,
-    command: Enums.SlashCommand.out
+    command: Enums.SlashCommand.out,
   };
   const responseInfo = {
     toUrl: Constants.SLACK_SEND_EPHEMERAL_URL,
-    userId: json.user.id
+    userId: json.user.id,
   };
-  handleInOut(context, responseInfo, function() {
+  handleInOut(context, responseInfo, function () {
     updateAnnouncement(updateInfo);
   }).then(() => {
     console.log("Handled in/out from modal button click");
@@ -78,14 +76,10 @@ export function handleViewSubmission(json: Types.SlackMessagePayload): void {
  * @param date the date of the practice the user is missing
  * @param updateInfo the info needed to update the announcement message after submission of the modal
  */
-async function openModal(
-  trigger: string,
-  updateInfo: Types.AnnouncementUpdateInfo
-) {
+async function openModal(trigger: string, updateInfo: Types.AnnouncementUpdateInfo) {
   // fetch event info to fill cache
   const col = new ColumnLocator();
   col.initialize(updateInfo.eventInfo.dateForColumnLocator || "");
-  const eventInfo = await getEventInfo(col);
   const payload = {
     trigger_id: trigger,
     view: {
@@ -94,17 +88,17 @@ async function openModal(
       title: {
         type: "plain_text",
         text: "Explanation",
-        emoji: true
+        emoji: true,
       },
       submit: {
         type: "plain_text",
         text: "Submit",
-        emoji: true
+        emoji: true,
       },
       close: {
         type: "plain_text",
         text: "Cancel",
-        emoji: true
+        emoji: true,
       },
       private_metadata: JSON.stringify(updateInfo),
       blocks: [
@@ -114,7 +108,7 @@ async function openModal(
           label: {
             type: "plain_text",
             text: "Please give a reason for missing practice:",
-            emoji: true
+            emoji: true,
           },
           element: {
             type: "plain_text_input",
@@ -122,21 +116,21 @@ async function openModal(
             placeholder: {
               type: "plain_text",
               text: "Your explanation here",
-              emoji: true
+              emoji: true,
             },
-            action_id: Constants.REASON_ACTION_ID
-          }
-        }
-      ]
-    }
+            action_id: Constants.REASON_ACTION_ID,
+          },
+        },
+      ],
+    },
   };
-  const response = await fetch(Constants.SLACK_OPEN_MODAL_URL, {
+  await fetch(Constants.SLACK_OPEN_MODAL_URL, {
     method: "POST",
     body: JSON.stringify(payload),
     headers: {
       Authorization: Constants.API_TOKEN,
-      ...Constants.JSON_CONTENT_HEADERS
-    }
+      ...Constants.JSON_CONTENT_HEADERS,
+    },
   });
   console.log("Got response to modal post");
 }

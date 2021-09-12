@@ -32,3 +32,7 @@ export async function tryGetCache(
     }
   });
 }
+
+export async function clearRedisCache() {
+  await redis.flushall();
+}

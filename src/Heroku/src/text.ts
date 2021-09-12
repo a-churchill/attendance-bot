@@ -29,6 +29,8 @@ export function getSlashCommand(command: string): Enums.SlashCommand {
       return Enums.SlashCommand.announce;
     case "/h":
       return Enums.SlashCommand.help;
+    case "/clear-cache":
+      return Enums.SlashCommand.clearCache;
     default:
       // should never happen
       throw "Unimplemented slash command " + command;
@@ -47,10 +49,7 @@ export function parseAnnounceNote(
     if (!date.isValid()) date.initialize(eventDate);
     else {
       // valid offset, remove it from note
-      note = note
-        .split(" ")
-        .slice(1)
-        .join(" ");
+      note = note.split(" ").slice(1).join(" ");
       console.log(`Offset of ${potentialOffset}; remaining note: ${note}`);
     }
   } else {
@@ -88,9 +87,7 @@ export class ColumnLocator {
    * @param dateInput the input given by the user (everything after slash command but before space), or string representation from toString.
    */
   initialize(dateInput: string): Enums.DateParseResult {
-    let [dateStr, ...offsetList] = dateInput.split(
-      Constants.OFFSET_SPECIFIER_PREFIX
-    ); // remove offset for checking, add it back at the end
+    let [dateStr, ...offsetList] = dateInput.split(Constants.OFFSET_SPECIFIER_PREFIX); // remove offset for checking, add it back at the end
     if (dateStr.length == 0) {
       return Enums.DateParseResult.addToReason;
     }
@@ -143,9 +140,7 @@ export class ColumnLocator {
   getOffset(): number {
     if (!this.initialized) throw ColumnLocator.ERROR_MESSAGE;
     return (
-      parseInt(
-        this.offset.substring(Constants.OFFSET_SPECIFIER_PREFIX.length)
-      ) - 1
+      parseInt(this.offset.substring(Constants.OFFSET_SPECIFIER_PREFIX.length)) - 1
     );
   }
 

@@ -22,66 +22,71 @@ function doGet(e: GetContent): GoogleAppsScript.Content.TextOutput {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName(CURRENT_SHEET);
   try {
-    if (e.parameter.method === GOOGLE_EVENT_COUNT_NAME) {
-      console.log("Getting event count");
-      const date = (e.parameter.value as string).replace(
-        URL_SAFE_OFFSET_SPECIFIER_PREFIX,
-        OFFSET_SPECIFIER_PREFIX
-      );
-      const dateObj = new ColumnLocator();
-      const result = dateObj.initialize(date);
-      const invalidDateErrorResult = JSON.stringify({
-        ok: false,
-        payload: "invalid date",
-      });
-      if (result === DateParseResult.addToReason) {
-        return ContentService.createTextOutput(invalidDateErrorResult);
-      }
-      let dateCol = -1;
-      try {
-        dateCol = getDateCol(dateObj, sheet);
-      } catch (err) {
-        return ContentService.createTextOutput(invalidDateErrorResult);
-      }
-      return ContentService.createTextOutput(
-        JSON.stringify({
-          ok: true,
-          payload: parseInt(sheet.getRange(COUNT_ROW, dateCol).getDisplayValue()),
-        })
-      );
-    } else if (e.parameter.method === GOOGLE_EVENT_INFO_NAME) {
-      console.log("Getting event info for " + JSON.stringify(e.parameter));
-      const date = (e.parameter.value as string).replace(
-        URL_SAFE_OFFSET_SPECIFIER_PREFIX,
-        OFFSET_SPECIFIER_PREFIX
-      );
-      const dateObj = new ColumnLocator();
-      dateObj.initialize(date);
-      if (!dateObj.isValid() && date.length > 0) throw "invalid date string " + date;
-      console.log(
-        `For date: ${(dateObj.isValid() && dateObj.toString()) || "unspecified"}`
-      );
-      try {
-        let dateCol = getDateCol(dateObj, sheet);
-        const eventInfo = getEventInfoFromCol(sheet, dateCol);
+    switch (e.parameter.method) {
+      case GOOGLE_EVENT_COUNT_NAME: {
+        console.log("Getting event count");
+        const date = (e.parameter.value as string).replace(
+          URL_SAFE_OFFSET_SPECIFIER_PREFIX,
+          OFFSET_SPECIFIER_PREFIX
+        );
+        const dateObj = new ColumnLocator();
+        const result = dateObj.initialize(date);
+        const invalidDateErrorResult = JSON.stringify({
+          ok: false,
+          payload: "invalid date",
+        });
+        if (result === DateParseResult.addToReason) {
+          return ContentService.createTextOutput(invalidDateErrorResult);
+        }
+        let dateCol = -1;
+        try {
+          dateCol = getDateCol(dateObj, sheet);
+        } catch (err) {
+          return ContentService.createTextOutput(invalidDateErrorResult);
+        }
         return ContentService.createTextOutput(
           JSON.stringify({
             ok: true,
-            payload: eventInfo,
-          })
-        );
-      } catch {
-        return ContentService.createTextOutput(
-          JSON.stringify({
-            ok: false,
-            payload: `Error getting event info for date ${date}`,
+            payload: parseInt(sheet.getRange(COUNT_ROW, dateCol).getDisplayValue()),
           })
         );
       }
-    } else {
-      return ContentService.createTextOutput(
-        JSON.stringify({ ok: false, payload: "invalid method name" })
-      );
+      case GOOGLE_EVENT_INFO_NAME: {
+        console.log("Getting event info for " + JSON.stringify(e.parameter));
+        const date = (e.parameter.value as string).replace(
+          URL_SAFE_OFFSET_SPECIFIER_PREFIX,
+          OFFSET_SPECIFIER_PREFIX
+        );
+        const dateObj = new ColumnLocator();
+        dateObj.initialize(date);
+        if (!dateObj.isValid() && date.length > 0) throw "invalid date string " + date;
+        console.log(
+          `For date: ${(dateObj.isValid() && dateObj.toString()) || "unspecified"}`
+        );
+        try {
+          let dateCol = getDateCol(dateObj, sheet);
+          const eventInfo = getEventInfoFromCol(sheet, dateCol);
+          return ContentService.createTextOutput(
+            JSON.stringify({
+              ok: true,
+              payload: eventInfo,
+            })
+          );
+        } catch {
+          return ContentService.createTextOutput(
+            JSON.stringify({
+              ok: false,
+              payload: `Error getting event info for date ${date}`,
+            })
+          );
+        }
+      }
+      case GOOGLE_CLEAR_CACHE_NAME:
+        clearCache();
+      default:
+        return ContentService.createTextOutput(
+          JSON.stringify({ ok: false, payload: "invalid method name" })
+        );
     }
   } catch (err) {
     console.log(err);

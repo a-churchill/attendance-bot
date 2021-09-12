@@ -3,10 +3,11 @@ export enum SlashCommand {
   out,
   announce,
   help,
-  none
+  clearCache,
+  none,
 }
 
 export enum DateParseResult {
   success,
-  addToReason
+  addToReason,
 }

@@ -1,10 +1,9 @@
-import fetch from 'node-fetch';
+import fetch from "node-fetch";
 
-import { tryGetCache } from './cache';
-import * as Constants from './constants';
-import * as Enums from './enums';
-import * as Types from './interfaces';
-import { ColumnLocator } from './text';
+import { clearRedisCache, tryGetCache } from "./cache";
+import * as Constants from "./constants";
+import * as Types from "./interfaces";
+import { ColumnLocator } from "./text";
 
 /**
  * Gets the event info from the spreadsheet (all required fields) wrapped in GoogleResponse
@@ -17,7 +16,12 @@ export async function getEventInfo(date: ColumnLocator | null) {
       date.toString(),
       sendGetRequest(
         Constants.GOOGLE_EVENT_INFO_NAME,
-        date.toString().replace(Constants.OFFSET_SPECIFIER_PREFIX, Constants.URL_SAFE_OFFSET_SPECIFIER_PREFIX)
+        date
+          .toString()
+          .replace(
+            Constants.OFFSET_SPECIFIER_PREFIX,
+            Constants.URL_SAFE_OFFSET_SPECIFIER_PREFIX
+          )
       ), // to call on miss
       Constants.CACHE_DURATION_SHORT
     );
@@ -36,7 +40,15 @@ export async function getEventCount(date: ColumnLocator) {
   if (!date.isValid()) {
     throw "Trying to fetch event count for invalid date";
   }
-  return await sendGetRequest(Constants.GOOGLE_EVENT_COUNT_NAME, date.toString().replace(Constants.OFFSET_SPECIFIER_PREFIX, Constants.URL_SAFE_OFFSET_SPECIFIER_PREFIX));
+  return await sendGetRequest(
+    Constants.GOOGLE_EVENT_COUNT_NAME,
+    date
+      .toString()
+      .replace(
+        Constants.OFFSET_SPECIFIER_PREFIX,
+        Constants.URL_SAFE_OFFSET_SPECIFIER_PREFIX
+      )
+  );
 }
 
 /**
@@ -49,6 +61,14 @@ export async function setUserStatus(userStatus: Types.UserStatus) {
     body: JSON.stringify(userStatus),
     headers: Constants.JSON_CONTENT_HEADERS,
   }).then((res) => res.text());
+}
+
+/**
+ * Clear Google cache and Redis cache
+ */
+export async function clearCache() {
+  await clearRedisCache();
+  await sendGetRequest(Constants.GOOGLE_CLEAR_CACHE_NAME, "");
 }
 
 /**

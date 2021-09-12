@@ -9,6 +9,7 @@ import { handleInOut } from "./io";
 import { handleAnnounce, updateAnnouncement } from "./announce";
 import { getSlashCommand } from "./text";
 import { handleBlockAction, handleViewSubmission } from "./interactive";
+import { clearCache } from "./spreadsheet";
 
 const app = express();
 let port = process.env.PORT as unknown;
@@ -52,34 +53,32 @@ function handleSlashCommandPost(body: Types.SlackSlashCommandInfo): void {
   const context: Types.ResponseContext = {
     username: body.user_name,
     text: body.text,
-    command: getSlashCommand(body.command)
+    command: getSlashCommand(body.command),
   };
   const responseInfo: Types.ResponseCustomization = {
     toUrl: body.response_url,
-    userId: body.user_id
+    userId: body.user_id,
   };
   console.log(
-    "Slash command context after processing: " +
-      JSON.stringify(context, undefined, 2)
+    "Slash command context after processing: " + JSON.stringify(context, undefined, 2)
   );
   if (
     context.command === Enums.SlashCommand.in ||
     context.command === Enums.SlashCommand.out
   ) {
-    handleInOut(context, responseInfo, function() {}).then(() => {
+    handleInOut(context, responseInfo, function () {}).then(() => {
       console.log("Handled in/out");
     });
   } else if (context.command === Enums.SlashCommand.announce) {
+    clearCache();
     handleAnnounce(context, responseInfo).then(() => {
       console.log("Handled announce");
     });
   } else if (context.command === Enums.SlashCommand.help) {
     sendResponse(Constants.HELP_TEXT, responseInfo);
+  } else if (context.command === Enums.SlashCommand.clearCache) {
   } else {
-    sendResponse(
-      Constants.FAILURE_RESPONSE + "unsupported command",
-      responseInfo
-    );
+    sendResponse(Constants.FAILURE_RESPONSE + "unsupported command", responseInfo);
   }
 }
 
@@ -118,15 +117,15 @@ export function sendResponse(
     response_type: "ephemeral",
     user: responseInfo.userId, // will be specified when necessary
     channel: Constants.ANNOUNCE_CHANNEL_ID,
-    replace_original: false
+    replace_original: false,
   };
   fetch(responseInfo.toUrl, {
     method: "POST",
     body: JSON.stringify(payload),
     headers: {
       Authorization: Constants.API_TOKEN,
-      ...Constants.JSON_CONTENT_HEADERS
-    }
+      ...Constants.JSON_CONTENT_HEADERS,
+    },
   }).then(() => {
     console.log("Posted response message");
   });
