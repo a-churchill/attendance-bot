@@ -41,7 +41,7 @@ jobs:
       - name: Deploy Google Apps Script code
         id: clasp-deploy
         run: |
-          cd src/Google/src
+          cd google/src
           clasp deploy --description $(git log --format=%s -n 1)
 
       - name: Deploy Heroku code

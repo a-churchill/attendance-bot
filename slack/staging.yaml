@@ -1,0 +1,50 @@
+_metadata:
+  major_version: 1
+  minor_version: 1
+display_information:
+  name: AttendanceBotDev
+  description: Slack commands to update attendance spreadsheet.
+  background_color: "#1d7c00"
+features:
+  bot_user:
+    display_name: AttendanceBotDev
+    always_online: true
+  slash_commands:
+    - command: /in
+      url: https://attendance-bot-mit-staging.herokuapp.com/slash
+      description: Say 'y' for next practice. Date and comment optional.
+      usage_hint: "[date] [comment]"
+      should_escape: true
+    - command: /out
+      url: https://attendance-bot-mit-staging.herokuapp.com/slash
+      description: Say 'n' for next practice. Date optional.
+      usage_hint: "[date] [reason]"
+      should_escape: true
+    - command: /announce
+      url: https://attendance-bot-mit-staging.herokuapp.com/slash
+      description: Sends announcement for next practice. Note is optional.
+      usage_hint: "[note]"
+      should_escape: false
+    - command: /h
+      url: https://attendance-bot-mit-staging.herokuapp.com/slash
+      description: Learn AttendanceBot's commands
+      should_escape: false
+    - command: /clear-cache
+      url: https://attendance-bot-mit-staging.herokuapp.com/slash
+      description: Clear spreadsheet cache
+      should_escape: false
+oauth_config:
+  scopes:
+    bot:
+      - channels:history
+      - channels:read
+      - chat:write
+      - commands
+      - users:read
+settings:
+  interactivity:
+    is_enabled: true
+    request_url: https://attendance-bot-mit-staging.herokuapp.com/interactive
+  org_deploy_enabled: false
+  socket_mode_enabled: false
+  token_rotation_enabled: false

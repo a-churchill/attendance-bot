@@ -49,9 +49,9 @@ jobs:
       - name: Push Google Apps Script code
         id: clasp-push
         run: |
-          cd src/Google/src
+          cd google/src
           clasp push -f
 
       - name: Push Heroku code
         id: heroku-push
-        run: git push origin `git subtree split --prefix src/Heroku develop`:heroku --force
+        run: git push origin `git subtree split --prefix heroku develop`:heroku --force

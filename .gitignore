@@ -6,7 +6,7 @@ details.txt
 node_modules/
 built/
 dist/
-src/Heroku/dist/app.js
+heroku/dist/app.js
 npm-debug.log
 todo
 .env

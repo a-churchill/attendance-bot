@@ -62,7 +62,7 @@ AttendanceBot has a simple deploy pipeline set up on Heroku:
 
 ![heroku pipeline](imgs/heroku-pipeline.png "Heroku Pipeline")
 
-The pipeline is set up to automatically deploy anything pushed to the `heroku` branch of this repository. However, the `heroku` branch only contains the code in the `src/Heroku` directory; we can't deploy the entire repository to Heroku, because Heroku can't figure out what it actually needs to deploy. So to push only that code, we use git's `subtree` feature. See the aliases [above](#first-time-setup) for the `git heroku` alias which makes this easy. Then once CI passes, it will be deployed in staging!
+The pipeline is set up to automatically deploy anything pushed to the `heroku` branch of this repository. However, the `heroku` branch only contains the code in the `heroku` directory; we can't deploy the entire repository to Heroku, because Heroku can't figure out what it actually needs to deploy. So to push only that code, we use git's `subtree` feature. See the aliases [above](#first-time-setup) for the `git heroku` alias which makes this easy. Then once CI passes, it will be deployed in staging!
 
 Once deployed in staging (and tested manually, if necessary)
 
@@ -82,7 +82,7 @@ Contributions and suggestions are welcome! Feel free to [submit an issue](https:
 
 1. Create a Google Apps Script for the attendance spreadsheet: Tools -> Script editor.
 2. Using the [`clasp` CLI](https://developers.google.com/apps-script/guides/clasp#clone_an_existing_project), clone the project.
-3. In the `src/Google/src` directory, run `clasp push` to push the code (add the `--watch` flag to have the `clasp` tool automatically push every time you save a file).
+3. In the `google/src` directory, run `clasp push` to push the code (add the `--watch` flag to have the `clasp` tool automatically push every time you save a file).
 
 The Slack API key is stored in the Google Apps Script properties. It is also encrypted in this repository with [blackbox](https://github.com/StackExchange/blackbox#blackbox-). The slash commands are specified on the Slack App page, under "Slash Commands".
 
@@ -107,7 +107,7 @@ The Heroku app needs some configuration:
 
 ### Slack
 
-The bot needs the following permissions: [channels:history](https://api.slack.com/scopes/channels:history), [channels:read](https://api.slack.com/scopes/channels:read), [chat:write](https://api.slack.com/scopes/chat:write), [commands](https://api.slack.com/scopes/commands), and [users:read](https://api.slack.com/scopes/commands). Also, this assumes that the AttendanceBot application is set up so slash commands and interactive commands are sent to the appropriate URLs.
+The bot needs the following permissions: [channels:history](https://api.slack.com/scopes/channels:history), [channels:read](https://api.slack.com/scopes/channels:read), [chat:write](https://api.slack.com/scopes/chat:write), [commands](https://api.slack.com/scopes/commands), and [users:read](https://api.slack.com/scopes/commands). Also, this assumes that the AttendanceBot application is set up so slash commands and interactive commands are sent to the appropriate URLs. See the manifest files in the [`slack`](slack) directory.
 
 ### Current Limitations
 
