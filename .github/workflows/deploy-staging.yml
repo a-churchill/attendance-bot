@@ -52,4 +52,4 @@ jobs:
 
       - name: Push Heroku code
         id: heroku-push
-        run: git subtree push --prefix src/Heroku origin heroku
+        run: git push origin `git subtree split --prefix src/Heroku develop`:heroku --force
