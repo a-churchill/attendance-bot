@@ -39,10 +39,12 @@ jobs:
         id: clasp-login
         run: clasp login --status
 
-
       - name: Checkout repo
         id: checkout-repo
         uses: actions/checkout@v2
+        with:
+          # Need to use personal access token to make sure action runs on `heroku` push
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
 
       - name: Push Google Apps Script code
         id: clasp-push
