@@ -3,7 +3,7 @@
 # Credit to https://github.com/ericanastas/deploy-google-app-script-action for the
 # inspiration!
 
-name: Deploy Staging
+name: Update Clasp Login
 
 # Controls when the workflow will run
 on:
@@ -24,7 +24,7 @@ jobs:
     steps:
       - name: Install clasp
         id: install-clasp
-        run: sudo npm install @google/clasp@2.4.1 -g
+        run: sudo npm install @google/clasp@2.3.0 -g
 
       - name: Write CLASPRC_JSON secret to .clasprc.json file
         id: write-clasprc
