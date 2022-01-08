@@ -1,0 +1,55 @@
+# This workflow deploys to production.
+
+# Credit to https://github.com/ericanastas/deploy-google-app-script-action for the
+# essential instructions on authenticating GAS from GitHub Actions!
+
+name: Deploy Production
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Install clasp
+        id: install-clasp
+        run: sudo npm install @google/clasp@2.4.1 -g
+
+      - name: Write CLASPRC_JSON secret to .clasprc.json file
+        id: write-clasprc
+        run: echo "$CLASPRC_JSON_SECRET" >> ~/.clasprc.json
+        env:
+          CLASPRC_JSON_SECRET: ${{ secrets.CLASPRC_JSON }}
+
+      - name: Check clasp login status
+        id: clasp-login
+        run: clasp login --status
+
+
+      - name: Checkout repo
+        id: checkout-repo
+        uses: actions/checkout@v2
+
+      - name: Deploy Google Apps Script code
+        id: clasp-deploy
+        run: |
+          cd src/Google/src
+          clasp deploy --description $(git log --format=%s -n 1)
+
+      - name: Deploy Heroku code
+        id: heroku-deploy
+        run: heroku pipelines:promote -a attendance-bot-mit-staging
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+
+      - name: Push to production branch
+        id: production-push
+        run: git push origin production --force
