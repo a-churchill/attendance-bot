@@ -15,7 +15,7 @@ on:
   - cron: "0 0 * * SUN"
 
 jobs:
-  # This workflow contains a single job called "build"
+  # This workflow contains a single job called "update-login"
   update-login:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
