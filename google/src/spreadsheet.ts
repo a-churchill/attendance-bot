@@ -27,7 +27,7 @@ function getAdminNames(ss: GoogleAppsScript.Spreadsheet.Spreadsheet): string[] {
   const adminSheet = ss.getSheetByName(ADMIN_SHEET_NAME);
   const lastRow = adminSheet.getLastRow();
   const adminsDeep = adminSheet.getRange(2, 3, lastRow - 1, 1).getValues();
-  const admins = adminsDeep.map((x) => x[0]).filter((x) => x.length > 0);
+  const admins = adminsDeep.map((x) => x[0]).filter((x) => x !== "");
   const cache = cacheResult.result as GoogleAppsScript.Cache.Cache;
   cache.put(ADMINS_CACHE_KEY, JSON.stringify(admins), CACHE_DURATION);
   return admins;

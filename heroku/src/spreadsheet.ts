@@ -12,7 +12,11 @@ export async function getAdmins(): Promise<string[]> {
     Constants.CACHE_DURATION
   );
 
-  return JSON.parse(adminsStr);
+  const result = JSON.parse(adminsStr) as Types.GoogleResponse<string[]>;
+  if (!result.ok) {
+    throw new Error("Invalid result: " + JSON.stringify(result.payload));
+  }
+  return result.payload;
 }
 
 /**
