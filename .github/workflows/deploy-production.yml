@@ -38,11 +38,16 @@ jobs:
         id: checkout-repo
         uses: actions/checkout@v2
 
+      # set testing to false, and push code
       - name: Deploy Google Apps Script code
         id: clasp-deploy
         run: |
           cd google/src
+          sed -i 's/const TESTING = true;/const TESTING = false;/g' constants.ts
+          clasp push -f
           clasp deploy --description $(git log --format=%s -n 1)
+          sed -i 's/const TESTING = false;/const TESTING = true;/g' constants.ts
+          clasp push -f
 
       - name: Deploy Heroku code
         id: heroku-deploy

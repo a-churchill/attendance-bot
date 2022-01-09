@@ -1,5 +1,6 @@
 // if true, uses testing workspace and sheet; if false, uses production workspace and sheet
-const TESTING = false;
+// this is changed to `false` by the GitHub production deployment action
+const TESTING = true;
 // app configuration
 const CURRENT_SHEET = TESTING ? "(testing)" : "Fall 2021";
 const GOOGLE_CLEAR_CACHE_NAME = "clear-cache";

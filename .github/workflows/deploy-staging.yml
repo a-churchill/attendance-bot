@@ -46,10 +46,12 @@ jobs:
           # Need to use personal access token to make sure action runs on `heroku` push
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
 
+      # set testing to true, and push code
       - name: Push Google Apps Script code
         id: clasp-push
         run: |
           cd google/src
+          sed -i 's/const TESTING = false;/const TESTING = true;/g' constants.ts
           clasp push -f
 
       - name: Push Heroku code
