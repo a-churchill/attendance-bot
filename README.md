@@ -100,6 +100,8 @@ AttendanceBot pulls all of its data from the attendance spreadsheet we already u
 - Each column represents a separate event, and the pertinent information about that event (e.g. time, location) is in a predictable row, as configured in [`constants.ts`](src/constants.ts). _Note: none of the fields need to be unique._
 - One column (which can be hidden) holds each player's Slack username in their corresponding row.
 - The event information changes fairly infrequently (event information is cached for about 30 minutes after any cache miss). _Note: changes to the number of people coming are not cached, to ensure accuracy._
+  - Users can clear the cache with a **/clear_cache** command on Slack
+- The AttendanceBot Admin sheet contains cells to make changing the admins and current sheet easy.
 
 ### Heroku
 
