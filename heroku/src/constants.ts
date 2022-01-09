@@ -7,9 +7,13 @@ export const API_TOKEN = TESTING
   : (process.env.API_TOKEN as string);
 
 // Google Apps Script interface
+
 export const GOOGLE_URL = TESTING
-  ? "https://script.google.com/macros/s/AKfycbzQAWGCo5H1bczQM-U9AcUDciIhAsnCml6DynT1dHlh/dev"
-  : "https://script.google.com/macros/s/AKfycbwermIxnEbqqw77f6dCYhh304_2GN_i9kr9h5elCNTs0S3z0XX7HUC1fA27TDv6xCzNSQ/exec";
+  ? // this URL is for the latest version of the code
+    "https://script.google.com/macros/s/AKfycbzQAWGCo5H1bczQM-U9AcUDciIhAsnCml6DynT1dHlh/dev"
+  : // this URL is for the latest deployment, guaranteed by the DEPLOYMENT_ID set in the
+    // GitHub Action that creates deployments.
+    "https://script.google.com/macros/s/AKfycbx6pvmyrKI9iIa5N4uTC-tDCqNdprze6g3x8vekaIhtKBXqJkkK12rlmIaIgAeObz-YwQ/exec";
 export const GOOGLE_CLEAR_CACHE_NAME = "clear-cache";
 export const GOOGLE_EVENT_INFO_NAME = "event-info";
 export const GOOGLE_EVENT_COUNT_NAME = "event-count";

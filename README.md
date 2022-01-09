@@ -1,5 +1,10 @@
 # AttendanceBot
 
+[![clasp](https://img.shields.io/badge/built%20with-clasp-4285f4.svg)](https://github.com/google/clasp)
+![jest tests](https://github.com/a-churchill/attendance-bot/actions/workflows/jest.yml/badge.svg?branch=heroku)
+![deploy to staging](https://github.com/a-churchill/attendance-bot/actions/workflows/deploy-staging.yml/badge.svg)
+![deploy to production](https://github.com/a-churchill/attendance-bot/actions/workflows/deploy-production.yml/badge.svg)
+
 ## Overview
 
 **AttendanceBot** is a Slack app to make tracking who's going to practice (or scrimmages, or tournaments) much easier. Our [Ultimate Frisbee team here at MIT](http://mens-ult.mit.edu/) uses an attendance spreadsheet, which looks like this:
@@ -36,7 +41,7 @@ AttendanceBot is written entirely in TypeScript, and it is hosted primarily on H
 
    - [`git`](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
    - [`node`](https://nodejs.org/en/download/) (this will also install `npm`)
-   - [`clasp`](https://developers.google.com/apps-script/guides/clasp#installation)
+   - [`clasp`](https://developers.google.com/apps-script/guides/clasp#installation) (install version 2.3.0 unless you want to figure out a bug with newer versions)
    - [`gh`](https://github.com/cli/cli#installation) GitHub CLI
 
 2. Join the [testing Slack workspace](https://join.slack.com/t/testingworksp/shared_invite/zt-11c5f4rhu-atU6Ym5TIbQUCUrlSH6e8Q), to allow for manual testing of new features outside of the main Slack app

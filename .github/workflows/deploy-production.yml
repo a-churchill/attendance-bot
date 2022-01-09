@@ -45,17 +45,15 @@ jobs:
           cd google/src
           sed -i 's/const TESTING = true;/const TESTING = false;/g' constants.ts
           clasp push -f
-          clasp deploy --description $(git log --format=%s -n 1)
-          echo "MESSAGE $(git log --format=%s -n 1)"
-          git log --format=%s -n 1
+          clasp deploy --deploymentId $DEPLOYMENT_ID --description "$(git log --format=%s -n 1)"
           sed -i 's/const TESTING = false;/const TESTING = true;/g' constants.ts
           clasp push -f
+        env:
+          DEPLOYMENT_ID: AKfycbx6pvmyrKI9iIa5N4uTC-tDCqNdprze6g3x8vekaIhtKBXqJkkK12rlmIaIgAeObz-YwQ
 
       - name: Deploy Heroku code
         id: heroku-deploy
-        run: |
-          heroku login
-          heroku pipelines:promote -a attendance-bot-mit-staging
+        run: heroku pipelines:promote -a attendance-bot-mit-staging
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
 
