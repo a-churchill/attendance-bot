@@ -2,9 +2,10 @@
  * Tries to fetch the given key from the cache. Returns cache if lookup failed.
  * @param key key to look up in cache.
  */
-function tryFetchCache(
-  key: string
-): { hit: boolean; result: GoogleAppsScript.Cache.Cache | string } {
+function tryFetchCache(key: string): {
+  hit: boolean;
+  result: GoogleAppsScript.Cache.Cache | string;
+} {
   const cache = CacheService.getScriptCache();
   const cached = cache.get(key);
   if (cached != null) {

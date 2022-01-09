@@ -5,6 +5,16 @@ import * as Constants from "./constants";
 import * as Types from "./interfaces";
 import { ColumnLocator } from "./text";
 
+export async function getAdmins(): Promise<string[]> {
+  const adminsStr = await tryGetCache(
+    Constants.ADMINS_CACHE_KEY,
+    sendGetRequest(Constants.GOOGLE_GET_ADMINS_NAME, ""), // to call on miss
+    Constants.CACHE_DURATION
+  );
+
+  return JSON.parse(adminsStr);
+}
+
 /**
  * Gets the event info from the spreadsheet (all required fields) wrapped in GoogleResponse
  * @param date date of event info to get; if null, gets info for next event
@@ -38,7 +48,7 @@ export async function getEventInfo(date: ColumnLocator | null) {
  */
 export async function getEventCount(date: ColumnLocator) {
   if (!date.isValid()) {
-    throw "Trying to fetch event count for invalid date";
+    throw new Error("Trying to fetch event count for invalid date");
   }
   return await sendGetRequest(
     Constants.GOOGLE_EVENT_COUNT_NAME,

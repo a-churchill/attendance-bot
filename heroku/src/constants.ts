@@ -17,6 +17,7 @@ export const GOOGLE_URL = TESTING
 export const GOOGLE_CLEAR_CACHE_NAME = "clear-cache";
 export const GOOGLE_EVENT_INFO_NAME = "event-info";
 export const GOOGLE_EVENT_COUNT_NAME = "event-count";
+export const GOOGLE_GET_ADMINS_NAME = "get-admins";
 
 // Slack URLs
 export const SLACK_SEND_MESSAGE_URL = "https://slack.com/api/chat.postMessage";
@@ -25,9 +26,6 @@ export const SLACK_SEND_EPHEMERAL_URL = "https://slack.com/api/chat.postEphemera
 export const SLACK_USER_INFO_URL = "https://slack.com/api/users.info";
 export const SLACK_UPDATE_MESSAGE_URL = "https://slack.com/api/chat.update";
 export const MAX_EVENT_SEARCH_DISTANCE = 7;
-export const AUTHORIZED_ANNOUNCERS = TESTING
-  ? ["chu.andrew.8", "chu.andrew.8202"]
-  : ["adchurch", "ezgordon", "lgovedic", "mlandis"];
 export const ANNOUNCE_PICTURE_URL =
   "https://zn9zxq.bn.files.1drv.com/y4mV6VyeBzHtQSym10dE0dMd91KLlMO1EGLPoiiZaB1eBhpmuXzpRGBqqqetJLrQiH1kt48qRc-RbqivZAfsy65YdUfURsYtRc5L2WvDRhaBqhI-Y1v2u7c0Y7G11dwcex5ClfV_dEBvdOrWUlsFvGLypYs1uhi9hv_DoQp2U8ingapZOtOxAeRWbjkin9YfUE9qS80rsbo88CpwArOyVULjA?width=1000&height=1000&cropmode=none";
 export const REASON_BLOCK_ID = "reason_block";
@@ -41,6 +39,7 @@ export const URL_SAFE_OFFSET_SPECIFIER_PREFIX = "@";
 export const REDIS_CACHE_EXPIRATION_KEY = "EX";
 export const CACHE_DURATION = 21600; // 6 hours
 export const CACHE_DURATION_SHORT = 1500;
+export const ADMINS_CACHE_KEY = TESTING ? "admins_testing" : "admins";
 export const DATE_ROW_CACHE_KEY = TESTING ? "date_row_testing" : "date_row";
 export const EVENT_INFO_CACHE_KEY_PREFIX = TESTING
   ? "event_info_col_testing_"

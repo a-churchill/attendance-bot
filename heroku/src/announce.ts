@@ -1,11 +1,11 @@
-import fetch from 'node-fetch';
+import fetch from "node-fetch";
 
-import { sendResponse } from './app';
-import * as Constants from './constants';
-import * as Types from './interfaces';
-import { getEventCount, getEventInfo } from './spreadsheet';
-import { ColumnLocator, getEventDescription, parseAnnounceNote } from './text';
-import { getUserAvatarUrl } from './user';
+import { sendResponse } from "./app";
+import * as Constants from "./constants";
+import * as Types from "./interfaces";
+import { getAdmins, getEventCount, getEventInfo } from "./spreadsheet";
+import { ColumnLocator, getEventDescription, parseAnnounceNote } from "./text";
+import { getUserAvatarUrl } from "./user";
 
 /**
  * Handles an event announcement request, coming from a "/announce" command. Returns the
@@ -18,7 +18,8 @@ export async function handleAnnounce(
   responseInfo: Types.ResponseCustomization
 ) {
   // make sure user is authorized
-  if (!Constants.AUTHORIZED_ANNOUNCERS.includes(context.username)) {
+  const admins = await getAdmins();
+  if (!admins.includes(context.username)) {
     const response =
       Constants.ANNOUNCE_FAILURE_RESPONSE +
       "you're not authorized to announce practices.";
@@ -37,7 +38,7 @@ export async function handleAnnounce(
     let body = JSON.parse(eventInfoStr) as Types.GoogleResponse<Types.EventInfo>;
     if (!body.ok) {
       // request failed
-      throw body.payload;
+      throw new Error("Request failed: " + JSON.stringify(body.payload));
     }
 
     // parse announce text, fetch new event info if necessary
@@ -171,8 +172,8 @@ function makeAnnouncementBlocks(eventInfo: Types.EventInfo): Array<Types.SlackBl
  * @param sheet current sheet, for fetching updated event count
  */
 export async function updateAnnouncement(updateInfo: Types.AnnouncementUpdateInfo) {
-  console.log("Updating announcement")
-  console.log(JSON.stringify(updateInfo))
+  console.log("Updating announcement");
+  console.log(JSON.stringify(updateInfo));
   if (typeof updateInfo === "undefined") return;
   let eventInfo = updateInfo.eventInfo;
   // get user info, set up avatars array

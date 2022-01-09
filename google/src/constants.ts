@@ -1,11 +1,14 @@
 // if true, uses testing workspace and sheet; if false, uses production workspace and sheet
 // this is changed to `false` by the GitHub production deployment action
 const TESTING = true;
+
 // app configuration
-const CURRENT_SHEET = TESTING ? "(testing)" : "Fall 2021";
+const ADMIN_SHEET_NAME = "AttendanceBot Admin";
+const TESTING_SHEET_NAME = "(testing)";
 const GOOGLE_CLEAR_CACHE_NAME = "clear-cache";
 const GOOGLE_EVENT_INFO_NAME = "event-info";
 const GOOGLE_EVENT_COUNT_NAME = "event-count";
+const GOOGLE_GET_ADMINS_NAME = "get-admins";
 const MAX_EVENT_SEARCH_DISTANCE = 7;
 const OFFSET_SPECIFIER_PREFIX = "#";
 const URL_SAFE_OFFSET_SPECIFIER_PREFIX = "@";
@@ -13,6 +16,8 @@ const URL_SAFE_OFFSET_SPECIFIER_PREFIX = "@";
 // cache configuration
 const CACHE_DURATION = 21600; // 6 hours
 const CACHE_DURATION_SHORT = 1500;
+const CURRENT_SHEET_CACHE_KEY = "current_sheet_name";
+const ADMINS_CACHE_KEY = "admins";
 const DATE_ROW_CACHE_KEY = TESTING ? "date_row_testing" : "date_row";
 const EVENT_INFO_CACHE_KEY_PREFIX = TESTING
   ? "event_info_col_testing_"

@@ -1,7 +1,8 @@
 function doPost(e: PostContent): GoogleAppsScript.Content.TextOutput {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getSheetByName(CURRENT_SHEET);
+  const sheet = ss.getSheetByName(getCurrentSheetName(ss));
   console.log("Post: " + e.postData.contents);
+  console.log("Sheet: " + sheet.getName());
   try {
     const result = handleInOut(JSON.parse(e.postData.contents), sheet);
     return ContentService.createTextOutput(result);
@@ -20,7 +21,7 @@ function doPost(e: PostContent): GoogleAppsScript.Content.TextOutput {
  */
 function doGet(e: GetContent): GoogleAppsScript.Content.TextOutput {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getSheetByName(CURRENT_SHEET);
+  const sheet = ss.getSheetByName(getCurrentSheetName(ss));
   try {
     switch (e.parameter.method) {
       case GOOGLE_EVENT_COUNT_NAME: {
@@ -59,7 +60,8 @@ function doGet(e: GetContent): GoogleAppsScript.Content.TextOutput {
         );
         const dateObj = new ColumnLocator();
         dateObj.initialize(date);
-        if (!dateObj.isValid() && date.length > 0) throw "invalid date string " + date;
+        if (!dateObj.isValid() && date.length > 0)
+          throw new Error("invalid date string " + date);
         console.log(
           `For date: ${(dateObj.isValid() && dateObj.toString()) || "unspecified"}`
         );
@@ -83,6 +85,13 @@ function doGet(e: GetContent): GoogleAppsScript.Content.TextOutput {
       }
       case GOOGLE_CLEAR_CACHE_NAME:
         clearCache();
+      case GOOGLE_GET_ADMINS_NAME: {
+        const admins = getAdminNames(ss);
+        console.log("Got admins:", JSON.stringify(admins));
+        return ContentService.createTextOutput(
+          JSON.stringify({ ok: true, payload: admins })
+        );
+      }
       default:
         return ContentService.createTextOutput(
           JSON.stringify({ ok: false, payload: "invalid method name" })

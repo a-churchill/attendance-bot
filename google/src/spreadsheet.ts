@@ -1,3 +1,38 @@
+/**
+ * Gets the name of the current spreadsheet (e.g. Fall 2021, Spring 2022) from the admin
+ * sheet.
+ */
+function getCurrentSheetName(ss: GoogleAppsScript.Spreadsheet.Spreadsheet): string {
+  if (TESTING) {
+    return ss.getSheetByName(TESTING_SHEET_NAME).getName();
+  } else {
+    const cacheResult = tryFetchCache(CURRENT_SHEET_CACHE_KEY);
+    if (cacheResult.hit) {
+      return cacheResult.result as string;
+    }
+    const adminSheet = ss.getSheetByName(ADMIN_SHEET_NAME);
+    const currentSheetName = adminSheet.getRange(2, 2).getValue();
+    const cache = cacheResult.result as GoogleAppsScript.Cache.Cache;
+    cache.put(CURRENT_SHEET_CACHE_KEY, currentSheetName, CACHE_DURATION);
+    return currentSheetName;
+  }
+}
+
+function getAdminNames(ss: GoogleAppsScript.Spreadsheet.Spreadsheet): string[] {
+  const cacheResult = tryFetchCache(ADMINS_CACHE_KEY);
+
+  if (cacheResult.hit) {
+    return JSON.parse(cacheResult.result as string);
+  }
+  const adminSheet = ss.getSheetByName(ADMIN_SHEET_NAME);
+  const lastRow = adminSheet.getLastRow();
+  const adminsDeep = adminSheet.getRange(2, 3, lastRow - 1, 1).getValues();
+  const admins = adminsDeep.map((x) => x[0]);
+  const cache = cacheResult.result as GoogleAppsScript.Cache.Cache;
+  cache.put(ADMINS_CACHE_KEY, JSON.stringify(admins), CACHE_DURATION);
+  return admins;
+}
+
 // gets the row of the given username. Expects the Slack usernames to be in
 // USERNAME_COL. Throws error if username not found.
 /**
@@ -26,7 +61,7 @@ function getUserRow(
   }
   let row = usernames.indexOf(username, HEADER_ROWS);
   if (row === -1) {
-    throw "username " + username + " not found on spreadsheet!";
+    throw new Error("username " + username + " not found on spreadsheet!");
   }
   return row + 1;
 }
@@ -63,9 +98,11 @@ function getDateCol(
     try {
       nextPrac = getNextPracticeDate(sheet, false) as string;
     } catch (err) {
-      throw `couldn't find any event on ${date}.${DATE_HELP_INFO}`;
+      throw new Error(`couldn't find any event on ${date}.${DATE_HELP_INFO}`);
     }
-    throw `couldn't find any event on ${date.getDate()}. Next practice is on ${nextPrac}.${DATE_HELP_INFO}`;
+    throw new Error(
+      `couldn't find any event on ${date.getDate()}. Next practice is on ${nextPrac}.${DATE_HELP_INFO}`
+    );
   }
   return col + date.getOffset() + 1;
 }
@@ -111,7 +148,7 @@ function getNextPracticeDate(
     }
     return returnCol ? col + 1 : getDateText(date);
   }
-  throw "no practice in next " + MAX_EVENT_SEARCH_DISTANCE + " days.";
+  throw new Error("no practice in next " + MAX_EVENT_SEARCH_DISTANCE + " days.");
 }
 
 /**

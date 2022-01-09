@@ -33,7 +33,7 @@ export function getSlashCommand(command: string): Enums.SlashCommand {
       return Enums.SlashCommand.clearCache;
     default:
       // should never happen
-      throw "Unimplemented slash command " + command;
+      throw new Error("Unimplemented slash command " + command);
   }
 }
 
@@ -102,7 +102,7 @@ export class ColumnLocator {
     }
     // now guaranteed that dateStr matches DATE_REGEX; add sanity check
     if (!dateStr.match(ColumnLocator.DATE_REGEX))
-      throw `Assertion failed, ${dateStr} doesn't match format`;
+      throw new Error(`Assertion failed, ${dateStr} doesn't match format`);
 
     // append year to date to follow rep invariant
     const currentYear = new Date(Date.now()).getFullYear();
@@ -130,7 +130,7 @@ export class ColumnLocator {
    * Returns the date, in the format m/d/yyyy (no leading zeroes)
    */
   getDate(): string {
-    if (!this.initialized) throw ColumnLocator.ERROR_MESSAGE;
+    if (!this.initialized) throw new Error(ColumnLocator.ERROR_MESSAGE);
     return this.date;
   }
 
@@ -138,7 +138,7 @@ export class ColumnLocator {
    * Returns the offset, where offset for "#n" is n - 1 (so "#2" -> 1)
    */
   getOffset(): number {
-    if (!this.initialized) throw ColumnLocator.ERROR_MESSAGE;
+    if (!this.initialized) throw new Error(ColumnLocator.ERROR_MESSAGE);
     return (
       parseInt(this.offset.substring(Constants.OFFSET_SPECIFIER_PREFIX.length)) - 1
     );
@@ -148,7 +148,7 @@ export class ColumnLocator {
    * Returns object in representation that can be parsed by the constructor.
    */
   toString(): string {
-    if (!this.initialized) throw ColumnLocator.ERROR_MESSAGE;
+    if (!this.initialized) throw new Error(ColumnLocator.ERROR_MESSAGE);
     return this.date + this.offset;
   }
 
