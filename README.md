@@ -51,7 +51,7 @@ git commit -m '[descriptive message]'
 git push origin develop
 
 # after deploys finish and you do manual testing on staging/test workspace
-gh workflow run deploy-production
+gh workflow run "Deploy Production"
 ```
 
 We use GitHub Actions to manage the deployment process across Heroku and Google Apps Script.
