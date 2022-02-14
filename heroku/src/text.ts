@@ -118,7 +118,7 @@ export class ColumnLocator {
     const result = parseInt(
       offsetStr.substring(Constants.OFFSET_SPECIFIER_PREFIX.length)
     );
-    if (isNaN(result) || result < 1 || result > 9)
+    if (isNaN(result) || result < 1)
       return Enums.DateParseResult.addToReason;
     this.offset = offsetStr;
     this.date = dateStr;
