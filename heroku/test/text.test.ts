@@ -51,13 +51,15 @@ describe("parseAnnounceNote function", () => {
     expect(date.getOffset()).toBe(3);
   });
 
-  test("invalid offset, too large", () => {
+  test("valid offset, large", () => {
     const { newNote, date } = parseAnnounceNote(
-      "#20 test practice",
+      "#20 test scrim",
       "3/2/2020"
     );
-    expect(newNote).toBe("#20 test practice");
-    expect(date.getOffset()).toBe(0);
+    expect(newNote).toBe("test scrim");
+    expect(date.isValid()).toBe(true);
+    expect(date.getDate()).toBe("3/2/2018");
+    expect(date.getOffset()).toBe(19);
   });
 
   test("invalid offset, NaN", () => {
@@ -66,6 +68,8 @@ describe("parseAnnounceNote function", () => {
       "3/2/2020"
     );
     expect(newNote).toBe("#lit test practice");
+    expect(date.isValid()).toBe(true);
+    expect(date.getDate()).toBe("3/2/2018");
     expect(date.getOffset()).toBe(0);
   });
 });
@@ -130,6 +134,13 @@ describe("ColumnLocator class", () => {
     expect(date.getOffset()).toBe(1);
   });
 
+  test("date string with large offset initialize", () => {
+    const date = new ColumnLocator();
+    expect(date.initialize("8/22#20")).toEqual(Enums.DateParseResult.success);
+    expect(date.getDate()).toBe("8/22/2018");
+    expect(date.getOffset()).toBe(19);
+  });
+  
   test("invalid date string with offset initialize", () => {
     const date = new ColumnLocator();
     expect(date.initialize("8/222/2018#3")).toEqual(
@@ -139,7 +150,7 @@ describe("ColumnLocator class", () => {
 
   test("date string with invalid offset initialize", () => {
     const date = new ColumnLocator();
-    expect(date.initialize("8/22/18#20")).toEqual(
+    expect(date.initialize("8/22/18#lit")).toEqual(
       Enums.DateParseResult.addToReason
     );
   });
