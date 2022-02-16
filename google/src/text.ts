@@ -127,7 +127,7 @@ class ColumnLocator {
       // no offset specified, give default
       offsetStr = OFFSET_SPECIFIER_PREFIX + "1";
     const result = parseInt(offsetStr.substring(OFFSET_SPECIFIER_PREFIX.length));
-    if (isNaN(result) || result < 1 || result > 9) return DateParseResult.addToReason;
+    if (isNaN(result) || result < 1) return DateParseResult.addToReason;
     this.offset = offsetStr;
     this.date = dateStr;
     this.initialized = true;
