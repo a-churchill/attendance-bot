@@ -62,6 +62,17 @@ describe("parseAnnounceNote function", () => {
     expect(date.getOffset()).toBe(19);
   });
 
+  test("invalid offset, negative", () => {
+    const { newNote, date } = parseAnnounceNote(
+      "#-1 test practice",
+      "3/2/2020"
+    );
+    expect(newNote).toBe("#-1 test practice");
+    expect(date.isValid()).toBe(true);
+    expect(date.getDate()).toBe("3/2/2018");
+    expect(date.getOffset()).toBe(0);
+  });
+  
   test("invalid offset, NaN", () => {
     const { newNote, date } = parseAnnounceNote(
       "#lit test practice",
@@ -147,7 +158,14 @@ describe("ColumnLocator class", () => {
       Enums.DateParseResult.addToReason
     );
   });
-
+  
+  test("date string with invalid offset initialize", () => {
+    const date = new ColumnLocator();
+    expect(date.initialize("8/22/18#0")).toEqual(
+      Enums.DateParseResult.addToReason
+    );
+  });
+  
   test("date string with invalid offset initialize", () => {
     const date = new ColumnLocator();
     expect(date.initialize("8/22/18#lit")).toEqual(
