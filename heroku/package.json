@@ -30,11 +30,11 @@
     "watch-ts": "tsc -w"
   },
   "repository": {
-    "url": "https://github.com/xxaxdxcxx/attendance-bot",
+    "url": "https://github.com/a-churchill/attendance-bot",
     "type": "git"
   },
   "engines": {
-    "node": "12.x"
+    "node": "22.x"
   },
   "author": "Andrew Churchill",
   "license": "ISC"

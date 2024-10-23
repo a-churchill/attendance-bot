@@ -67,17 +67,13 @@ AttendanceBot has a simple deploy pipeline set up on Heroku:
 
 ![heroku pipeline](imgs/heroku-pipeline.png "Heroku Pipeline")
 
-The pipeline is set up to automatically deploy anything pushed to the `heroku` branch of this repository. However, the `heroku` branch only contains the code in the `heroku` directory; we can't deploy the entire repository to Heroku, because Heroku can't figure out what it actually needs to deploy. So to push only that code, we use git's `subtree` feature. See the aliases [above](#first-time-setup) for the `git heroku` alias which makes this easy. Then once CI passes, it will be deployed in staging!
-
-Once deployed in staging (and tested manually, if necessary)
-
 ### Google Apps Script Information
 
-We use the `clasp` CLI to push/deploy the Google Apps Script project. We use a hack ([described here](https://github.com/ericanastas/deploy-google-app-script-action)) to allow authenticating with Google Apps Script from GitHub Actions. Currently the execution is tied to Andrew's Google account (chu.andrew.8@gmail.com), so adding this script to a different sheet would require sharing that spreadsheet and script with that account.
+We use the `clasp` CLI to push/deploy the Google Apps Script project. We use a hack ([described here](https://github.com/ericanastas/deploy-google-app-script-action)) to allow authenticating with Google Apps Script from GitHub Actions. Currently the execution is tied to Andrew's Google account (<chu.andrew.8@gmail.com>), so adding this script to a different sheet would require sharing that spreadsheet and script with that account.
 
 ## Contributing
 
-Contributions and suggestions are welcome! Feel free to [submit an issue](https://github.com/xxaxdxcxx/attendance-bot/issues/new) or open a pull request.
+Contributions and suggestions are welcome! Feel free to [submit an issue](https://github.com/a-churchill/attendance-bot/issues/new) or open a pull request.
 
 ### Development Instructions
 

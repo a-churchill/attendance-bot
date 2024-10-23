@@ -1,7 +1,8 @@
 import Redis = require("ioredis");
 import * as Constants from "./constants";
 
-const redis = new Redis(process.env.REDIS_URL);
+// https://devcenter.heroku.com/articles/connecting-heroku-redis#ioredis-module
+const redis = new Redis(process.env.REDIS_URL, { tls: { rejectUnauthorized: false } });
 
 /**
  * Tries to fetch given key from cache. Handles adding value returned from
