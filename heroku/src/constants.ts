@@ -9,8 +9,8 @@ export const API_TOKEN = TESTING
 // Google Apps Script interface
 
 export const GOOGLE_URL = TESTING
-  ? // this URL is for the latest version of the code
-    "https://script.google.com/macros/s/AKfycbzQAWGCo5H1bczQM-U9AcUDciIhAsnCml6DynT1dHlh/dev"
+  ? // this URL is for the public staging deployment
+    "https://script.google.com/macros/s/AKfycby-BX2LDtmou4bw4fRM-UCdXdDPwqhFLPjJ2TRK7gTq8v56gvbR5_q14t4YMXlAc9t9kA/exec"
   : // this URL is for the latest deployment, guaranteed by the DEPLOYMENT_ID set in the
     // GitHub Action that creates deployments.
     "https://script.google.com/macros/s/AKfycbx6pvmyrKI9iIa5N4uTC-tDCqNdprze6g3x8vekaIhtKBXqJkkK12rlmIaIgAeObz-YwQ/exec";
