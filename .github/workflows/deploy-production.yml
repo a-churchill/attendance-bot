@@ -51,6 +51,10 @@ jobs:
         env:
           DEPLOYMENT_ID: AKfycbx6pvmyrKI9iIa5N4uTC-tDCqNdprze6g3x8vekaIhtKBXqJkkK12rlmIaIgAeObz-YwQ
 
+      - name: Install Heroku CLI
+        id: install-heroku
+        run: curl https://cli-assets.heroku.com/install.sh | sh
+
       - name: Deploy Heroku code
         id: heroku-deploy
         run: heroku pipelines:promote -a attendance-bot-mit-staging
