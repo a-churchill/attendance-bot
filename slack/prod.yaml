@@ -11,26 +11,26 @@ features:
     always_online: true
   slash_commands:
     - command: /in
-      url: https://attendance-bot-mit.herokuapp.com/slash
+      url: https://attendance-bot.app/slash
       description: Say 'y' for next practice. Date and comment optional.
       usage_hint: "[date] [comment]"
       should_escape: true
     - command: /out
-      url: https://attendance-bot-mit.herokuapp.com/slash
+      url: https://attendance-bot.app/slash
       description: Say 'n' for next practice. Date optional.
       usage_hint: "[date] [reason]"
       should_escape: true
     - command: /announce
-      url: https://attendance-bot-mit.herokuapp.com/slash
+      url: https://attendance-bot.app/slash
       description: Sends announcement for next practice. Note is optional.
       usage_hint: "[note]"
       should_escape: false
     - command: /h
-      url: https://attendance-bot-mit.herokuapp.com/slash
+      url: https://attendance-bot.app/slash
       description: Learn AttendanceBot's commands
       should_escape: false
     - command: /clear-cache
-      url: https://attendance-bot-mit.herokuapp.com/slash
+      url: https://attendance-bot.app/slash
       description: Clear spreadsheet cache
       should_escape: false
 oauth_config:
@@ -44,7 +44,7 @@ oauth_config:
 settings:
   interactivity:
     is_enabled: true
-    request_url: https://attendance-bot-mit.herokuapp.com/interactive
+    request_url: https://attendance-bot.app/interactive
   org_deploy_enabled: false
   socket_mode_enabled: false
   token_rotation_enabled: false
