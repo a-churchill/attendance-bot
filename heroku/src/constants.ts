@@ -27,7 +27,7 @@ export const SLACK_USER_INFO_URL = "https://slack.com/api/users.info";
 export const SLACK_UPDATE_MESSAGE_URL = "https://slack.com/api/chat.update";
 export const MAX_EVENT_SEARCH_DISTANCE = 7;
 export const ANNOUNCE_PICTURE_URL =
-  "https://raw.githubusercontent.com/a-churchill/attendance-bot/develop/imgs/ultimate-icon.png";
+  "https://raw.githubusercontent.com/a-churchill/attendance-bot/86a1a5e2be6f7680b5fd6d3499a1ac0633ccbff8/imgs/ultimate-icon.png";
 export const REASON_BLOCK_ID = "reason_block";
 export const REASON_ACTION_ID = "reason_action";
 export const GITHUB_ISSUE_URL =
