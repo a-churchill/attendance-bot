@@ -10,3 +10,4 @@ heroku/dist/app.js
 npm-debug.log
 todo
 .env
+.DS_Store

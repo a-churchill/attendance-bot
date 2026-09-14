@@ -1,12 +1,13 @@
 function doPost(e: PostContent): GoogleAppsScript.Content.TextOutput {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getSheetByName(getCurrentSheetName(ss));
-  console.log("Post: " + e.postData.contents);
-  console.log("Sheet: " + sheet.getName());
   try {
+    const sheet = getCurrentSheet(ss);
+    console.log("Post: " + e.postData.contents);
+    console.log("Sheet: " + sheet.getName());
     const result = handleInOut(JSON.parse(e.postData.contents), sheet);
     return ContentService.createTextOutput(result);
-  } catch {
+  } catch (err) {
+    console.log("Error handling in/out: ", err);
     return ContentService.createTextOutput("Error with handling in/out");
   }
 }
@@ -21,10 +22,10 @@ function doPost(e: PostContent): GoogleAppsScript.Content.TextOutput {
  */
 function doGet(e: GetContent): GoogleAppsScript.Content.TextOutput {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getSheetByName(getCurrentSheetName(ss));
   try {
     switch (e.parameter.method) {
       case GOOGLE_EVENT_COUNT_NAME: {
+        const sheet = getCurrentSheet(ss);
         console.log("Getting event count");
         const date = (e.parameter.value as string).replace(
           URL_SAFE_OFFSET_SPECIFIER_PREFIX,
@@ -53,6 +54,7 @@ function doGet(e: GetContent): GoogleAppsScript.Content.TextOutput {
         );
       }
       case GOOGLE_EVENT_INFO_NAME: {
+        const sheet = getCurrentSheet(ss);
         console.log("Getting event info for " + JSON.stringify(e.parameter));
         const date = (e.parameter.value as string).replace(
           URL_SAFE_OFFSET_SPECIFIER_PREFIX,
@@ -74,7 +76,8 @@ function doGet(e: GetContent): GoogleAppsScript.Content.TextOutput {
               payload: eventInfo,
             })
           );
-        } catch {
+        } catch (err) {
+          console.log("Error getting event info: ", err);
           return ContentService.createTextOutput(
             JSON.stringify({
               ok: false,

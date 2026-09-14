@@ -1,21 +1,73 @@
 /**
+ * Gets a required sheet and reports the available sheet names when it is missing.
+ * A missing sheet otherwise becomes a confusing null.getLastColumn() error later.
+ */
+function getRequiredSheet(
+  ss: GoogleAppsScript.Spreadsheet.Spreadsheet,
+  name: string,
+  description: string
+): GoogleAppsScript.Spreadsheet.Sheet {
+  const sheet = ss.getSheetByName(name);
+  if (sheet !== null) {
+    return sheet;
+  }
+
+  const availableSheets = ss
+    .getSheets()
+    .map((candidate) => candidate.getName())
+    .join(", ");
+  throw new Error(
+    `${description} sheet "${name}" was not found. Available sheets: ${availableSheets || "(none)"}`
+  );
+}
+
+/**
  * Gets the name of the current spreadsheet (e.g. Fall 2021, Spring 2022) from the admin
  * sheet.
  */
 function getCurrentSheetName(ss: GoogleAppsScript.Spreadsheet.Spreadsheet): string {
   if (TESTING) {
-    return ss.getSheetByName(TESTING_SHEET_NAME).getName();
-  } else {
-    const cacheResult = tryFetchCache(CURRENT_SHEET_CACHE_KEY);
-    if (cacheResult.hit) {
-      return cacheResult.result as string;
-    }
-    const adminSheet = ss.getSheetByName(ADMIN_SHEET_NAME);
-    const currentSheetName = adminSheet.getRange(2, 2).getValue();
-    const cache = cacheResult.result as GoogleAppsScript.Cache.Cache;
-    cache.put(CURRENT_SHEET_CACHE_KEY, currentSheetName, CACHE_DURATION);
-    return currentSheetName;
+    return getRequiredSheet(ss, TESTING_SHEET_NAME, "Testing").getName();
   }
+
+  const cache = CacheService.getScriptCache();
+  const cachedSheetName = cache.get(CURRENT_SHEET_CACHE_KEY);
+  if (cachedSheetName !== null) {
+    // The admin sheet can be changed while this six-hour cache is still alive.
+    // Do not return a stale name for a sheet that has since been renamed/deleted.
+    const cachedSheet = ss.getSheetByName(cachedSheetName);
+    if (cachedSheet !== null) {
+      return cachedSheet.getName();
+    }
+    console.log(`Ignoring stale current sheet cache entry: ${cachedSheetName}`);
+    cache.remove(CURRENT_SHEET_CACHE_KEY);
+  }
+
+  const adminSheet = getRequiredSheet(ss, ADMIN_SHEET_NAME, "Admin");
+  const currentSheetName = adminSheet.getRange(2, 2).getDisplayValue().trim();
+  if (currentSheetName.length === 0) {
+    throw new Error(
+      `Admin sheet ${ADMIN_SHEET_NAME}!B2 is empty; set it to the current attendance sheet name`
+    );
+  }
+
+  const currentSheet = getRequiredSheet(
+    ss,
+    currentSheetName,
+    "Configured current attendance"
+  );
+  cache.put(CURRENT_SHEET_CACHE_KEY, currentSheet.getName(), CACHE_DURATION);
+  return currentSheet.getName();
+}
+
+function getCurrentSheet(
+  ss: GoogleAppsScript.Spreadsheet.Spreadsheet
+): GoogleAppsScript.Spreadsheet.Sheet {
+  return getRequiredSheet(
+    ss,
+    getCurrentSheetName(ss),
+    "Current attendance"
+  );
 }
 
 function getAdminNames(ss: GoogleAppsScript.Spreadsheet.Spreadsheet): string[] {
