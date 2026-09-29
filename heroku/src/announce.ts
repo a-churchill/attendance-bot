@@ -17,16 +17,18 @@ export async function handleAnnounce(
   context: Types.ResponseContext,
   responseInfo: Types.ResponseCustomization
 ) {
-  // make sure user is authorized
-  const admins = await getAdmins();
-  if (!admins.includes(context.username)) {
-    const response =
-      Constants.ANNOUNCE_FAILURE_RESPONSE +
-      "you're not authorized to announce practices.";
-    return sendResponse(response, responseInfo);
-  }
   // send announcement
   try {
+    // make sure user is authorized. Inside the try so a backend failure
+    // surfaces as a clear error to the user instead of dying silently.
+    const admins = await getAdmins();
+    if (!admins.includes(context.username)) {
+      const response =
+        Constants.ANNOUNCE_FAILURE_RESPONSE +
+        "you're not authorized to announce practices.";
+      return sendResponse(response, responseInfo);
+    }
+
     let note = context.text;
     if (note === "help")
       return sendResponse(Constants.ANNOUNCE_HELP_TEXT, responseInfo);

@@ -71,9 +71,16 @@ function handleSlashCommandPost(body: Types.SlackSlashCommandInfo): void {
     });
   } else if (context.command === Enums.SlashCommand.announce) {
     clearCache();
-    handleAnnounce(context, responseInfo).then(() => {
-      console.log("Handled announce");
-    });
+    handleAnnounce(context, responseInfo)
+      .then(() => {
+        console.log("Handled announce");
+      })
+      .catch((e) =>
+        sendResponse(
+          Constants.FAILURE_RESPONSE + `(error handling announce) ${e.message || e}`,
+          responseInfo
+        )
+      );
   } else if (context.command === Enums.SlashCommand.help) {
     sendResponse(Constants.HELP_TEXT, responseInfo);
   } else if (context.command === Enums.SlashCommand.clearCache) {
