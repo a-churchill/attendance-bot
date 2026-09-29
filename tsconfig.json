@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "lib": ["esnext"],
+    "allowJs": true,
+    "checkJs": true,
+    "experimentalDecorators": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "esModuleInterop": true
+  },
+  "include": ["src", "test"],
+  "exclude": ["dist"]
+}
