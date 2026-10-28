@@ -31,6 +31,32 @@ app.get("/", (_, res: Response) => {
   res.status(200).send("This is just a Slack app. Nothing to see here!");
 });
 
+app.get("/privacy", (_, res: Response) => {
+  res.status(200).type("html").send(`<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Privacy Policy | AttendanceBot</title>
+  </head>
+  <body>
+    <main>
+      <h1>AttendanceBot Privacy Policy</h1>
+      <p><strong>Effective date:</strong> October 28, 2026</p>
+      <p>AttendanceBot helps teams manage event attendance through Slack and a configured Google spreadsheet.</p>
+      <h2>Information we process</h2>
+      <p>When you use AttendanceBot, it processes Slack information needed to respond to your request, such as your Slack user name and ID, command or button input, attendance status, and any note you submit. It reads and updates attendance and event information in the spreadsheet configured by the team. The service also creates operational logs when handling requests.</p>
+      <h2>How information is used and shared</h2>
+      <p>Information is used to provide attendance features, update the configured spreadsheet, and operate and troubleshoot the service. Attendance information is visible to people who have access to that spreadsheet. AttendanceBot does not sell personal information. It relies on Slack, Google, and its hosting provider to deliver the service; those providers process information under their own terms and privacy policies.</p>
+      <h2>Retention and security</h2>
+      <p>Attendance entries and notes remain in the configured spreadsheet until its administrators change or remove them. Operational logs may be retained by the service or its hosting provider. Reasonable measures are used to protect service data, but no method of transmission or storage is completely secure.</p>
+      <h2>Your choices and contact</h2>
+      <p>For questions or requests about information in the attendance spreadsheet, contact your team’s spreadsheet administrator. For questions about AttendanceBot, contact <a href="mailto:chu.andrew.8@gmail.com">chu.andrew.8@gmail.com</a>.</p>
+    </main>
+  </body>
+</html>`);
+});
+
 app.post("/slash", (req: Request, res: Response) => {
   console.log("Got slash req");
   handleSlashCommandPost(req.body);
